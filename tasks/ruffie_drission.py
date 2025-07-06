@@ -44,7 +44,7 @@ def ruffie_drission(metadata: dict):
             page.ele('text=Daily Check-In', timeout=2).click()
             print(f"✅ 浏览器ID: {seq}, Daily Check-In")
 
-        page.wait(10)
+        page.wait(20)
     except Exception as e:
         print(f"❌ 浏览器ID: {seq}, 出现错误: {e}")
     finally:

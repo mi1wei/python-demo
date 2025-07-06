@@ -12,7 +12,6 @@ from base.okx import run_okx, run_okx_solana, yescaptcha
 from base.metamask import ethers
 from base.x import change_email
 from tasks.sowing_taker_playwright import taker
-from playwright_stealth import stealth_async
 from base.browser import get_browser_metadata
 
 
@@ -251,76 +250,6 @@ async def export_discord_token(playwright: Playwright, metadata: list, semaphore
             #     closeBrowser(browser_id)
             # except Exception as e:
             #     print(f"⚠️ 执行 closeBrowser({browser_id}) 失败: {e}")
-
-
-async def run_solovalue(playwright: Playwright, row: list, semaphore: asyncio.Semaphore):
-    async with semaphore:
-        browser_id = row[1]
-        seq = row[0]
-        private_key = row[2]
-        res = openBrowser(browser_id)
-        ws = res['data']['ws']
-        print(f"ws address ==>>> {ws}")
-
-        chromium = playwright.chromium
-        browser = await chromium.connect_over_cdp(ws)
-        default_context = browser.contexts[0]
-
-        extension_url = f"https://sosovalue.com/zh/exp"
-        page = await default_context.new_page()
-        await page.goto(extension_url, wait_until="networkidle")
-        print(f"✅ OKX 插件页面已打开, 浏览器ID: {seq}")
-
-        try:
-
-            parent_div = page.locator('div.grid.xl\\:grid-cols-3.grid-cols-1.gap-4')
-            buttons = parent_div.locator('button')
-            count = await buttons.count()
-            if count == 0:
-                print("未找到任何按钮")
-                return
-
-            for i in range(count):
-                button_text = await buttons.nth(i).text_content()
-                if i == 0 and button_text != '分享':
-                    await buttons.nth(i).click()
-
-                print(f"按钮 {i + 1}: {button_text.strip() if button_text else '无文本'}")
-
-            for i in range(count):
-                button_text = await buttons.nth(i).text_content()
-                if button_text == '分享':
-                    await buttons.nth(i).click()
-                    share_page_url = 'https://sosovalue.com/zh/assets/bitcoin-treasuries?tid=soso-airdrop-exp-daily_task&action=share'
-                    share_page = await default_context.new_page()
-                    await share_page.goto(share_page_url, wait_until="networkidle")
-                    share_button = page.locator(
-                        'div:has-text("单周总净流入") >> xpath=.. >> .. >> div.w-6.h-6.flex.justify-center.items-center.bg-background-hover-50-800'
-                    )
-
-                    await share_button.first.click()
-
-            await asyncio.sleep(60)
-
-            buttons = parent_div.locator('button')
-            count = await buttons.count()
-            if count == 0:
-                print("未找到任何按钮")
-                return
-            for i in range(count):
-                button_text = await buttons.nth(i).text_content()
-                if button_text.strip() == "验证":
-                    await buttons.nth(i).click()
-                print(f"按钮 {i + 1}: {button_text.strip() if button_text else '无文本'}")
-
-            print('he')
-        except Exception as e:
-            print(f"❌ 操作过程中发生错误: {e}, 浏览器ID: {seq}")
-        finally:
-            # await page.close()
-            # await browser.close()
-            # closeBrowser(browser_id)
-            print(f"🧹 浏览器已关闭, 浏览器ID: {seq}")
 
 
 async def run_cess(playwright: Playwright, row: list, semaphore: asyncio.Semaphore):

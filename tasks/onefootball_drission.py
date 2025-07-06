@@ -2,7 +2,7 @@ from DrissionPage import Chromium, ChromiumOptions
 from bit_api import *
 from chrome_extensions.okx import add_eth_wallet, choice_eth_wallet, handle_okx_popup
 
-
+# 70
 def onefootball_drission(metadata: dict):
     if len(metadata) < 10:
         return

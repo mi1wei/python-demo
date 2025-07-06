@@ -41,31 +41,31 @@ def yescaptcha_drission(row: dict):
                 return
 
             auto_div = page.ele('xpath=//div[contains(@class, "data-input") and .//span[text()="自动开启"]]', timeout=3)
-            # 打开 YesCaptcha 自动开启
-            if auto_div.html.__contains__('CheckBoxOutlineBlankIcon'):
-                checkbox = auto_div.ele('x:.//input[@type="checkbox"]')
-                checkbox.click()
-                print(f"  ✅ 浏览器ID: {seq},  YesCaptcha 打开 自动开启")
-
-            # 关闭 YesCaptcha 自动开启
-            # if auto_div.html.__contains__('CheckBoxIcon'):
+            # # 打开 YesCaptcha 自动开启
+            # if auto_div.html.__contains__('CheckBoxOutlineBlankIcon'):
             #     checkbox = auto_div.ele('x:.//input[@type="checkbox"]')
             #     checkbox.click()
-            #     print(f"  ✅ 浏览器ID: {seq},  YesCaptcha 关闭 自动开启")
+            #     print(f"  ✅ 浏览器ID: {seq},  YesCaptcha 打开 自动开启")
 
-            #  打开 文字验证码
-            if not is_checkbox_selected_by_svg(page, '文字验证码'):
-                # 如果没选中，就点击 checkbox
-                page.ele(f'x://label[.//span[contains(text(),"文字验证码")]]//input[@type="checkbox"]').click()
-                print(f"  ✅ 浏览器ID: {seq},  YesCaptcha 打开 文字验证码")
+            # 关闭 YesCaptcha 自动开启
+            if auto_div.html.__contains__('CheckBoxIcon'):
+                checkbox = auto_div.ele('x:.//input[@type="checkbox"]')
+                checkbox.click()
+                print(f"  ✅ 浏览器ID: {seq},  YesCaptcha 关闭 自动开启")
 
-            page.wait(2)
-
-            #  打开 Cloudflare
-            if not is_checkbox_selected_by_svg(page, 'Cloudflare'):
-                # 如果没选中，就点击 checkbox
-                page.ele(f'x://label[.//span[contains(text(),"Cloudflare")]]//input[@type="checkbox"]').click()
-                print(f"  ✅ 浏览器ID: {seq},  YesCaptcha 打开 Cloudflare")
+            # #  打开 文字验证码
+            # if not is_checkbox_selected_by_svg(page, '文字验证码'):
+            #     # 如果没选中，就点击 checkbox
+            #     page.ele(f'x://label[.//span[contains(text(),"文字验证码")]]//input[@type="checkbox"]').click()
+            #     print(f"  ✅ 浏览器ID: {seq},  YesCaptcha 打开 文字验证码")
+            #
+            # page.wait(2)
+            #
+            # #  打开 Cloudflare
+            # if not is_checkbox_selected_by_svg(page, 'Cloudflare'):
+            #     # 如果没选中，就点击 checkbox
+            #     page.ele(f'x://label[.//span[contains(text(),"Cloudflare")]]//input[@type="checkbox"]').click()
+            #     print(f"  ✅ 浏览器ID: {seq},  YesCaptcha 打开 Cloudflare")
 
             page.wait(10)
 
@@ -82,10 +82,6 @@ def yescaptcha_drission(row: dict):
             page.close()
         except Exception as e:
             print(f"⚠️ 浏览器ID: {seq}, 关闭页面失败: {e}")
-        try:
-            chromium.close()
-        except Exception as e:
-            print(f"⚠️ 浏览器ID: {seq}, 关闭浏览器失败: {e}")
         try:
             closeBrowser(browser_id)
         except Exception as e:

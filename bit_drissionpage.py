@@ -17,6 +17,7 @@ from tasks.onefootball_drission import onefootball_drission
 from tasks.zkverify import zkverify_drission
 from chrome_extensions.yescaptcha import yescaptcha_drission
 from tasks.sosovalue_drission import sosovalue_drission
+from tasks.assisterr_drission import assisterr_drission
 
 
 def x_detect(metadata: dict):
@@ -389,10 +390,10 @@ def taker_drission(metadata: dict):
 def main():
     file_path = 'configuration/primary'  # 替换成实际路径
     # [20]
-    metadatas = get_browser_metadata(file_path)[8:]
+    metadatas = get_browser_metadata(file_path)
 
     # 设置并发线程数，比如最多同时运行 5 个任务
-    max_workers = 1
+    max_workers = 10
 
     error_seq_id = []
     if error_seq_id:
@@ -400,7 +401,7 @@ def main():
 
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         future_to_metadata = {
-            executor.submit(sosovalue_drission, metadata): metadata for metadata in metadatas
+            executor.submit(ruffie_drission, metadata): metadata for metadata in metadatas
         }
 
         for future in as_completed(future_to_metadata):

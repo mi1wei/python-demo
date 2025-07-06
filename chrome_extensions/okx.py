@@ -189,7 +189,6 @@ def handle_okx_popup(page, seq, selector='text=OKX Wallet'):
         print(f'浏览器ID: {seq}, handle_okx_popup error {e}')
         return False
 
-
 def handle_okx(okx_tab, seq, selector='text=OKX Wallet'):
     try:
         if okx_tab.ele('x://input[@placeholder="请输入密码"]', timeout=5):
