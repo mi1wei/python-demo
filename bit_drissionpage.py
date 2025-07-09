@@ -18,6 +18,7 @@ from tasks.zkverify import zkverify_drission
 from chrome_extensions.yescaptcha import yescaptcha_drission
 from tasks.sosovalue_drission import sosovalue_drission
 from tasks.assisterr_drission import assisterr_drission
+from tasks.nebulai_drission import nebulai_drission
 
 
 def x_detect(metadata: dict):
@@ -91,63 +92,63 @@ def discord_detect(metadata: dict):
         closeBrowser(browser_id)
 
 
-def nebulai_drission(metadata: dict):
-    if len(metadata) < 10:
-        return
-
-    browser_id = metadata['browser_id']
-    seq = metadata['seq']
-    email = metadata['email']
-
-    extension_url = f"https://nebulai.network/opencompute?invite_by=Xpgd9P"
-
-    co = ChromiumOptions()
-    res = openBrowser(browser_id)
-    co.set_address(res['data']['http'])
-    co.set_pref('profile.default_content_setting_values.notifications', 2)
-    chromium = Chromium(co)
-    page = chromium.latest_tab
-
-    try:
-        page.get(extension_url)
-
-        if page.ele('text=Sign Up/Log In'):
-            page.ele('text=Sign Up/Log In').click()
-            page.ele('x://input[@name="email"]').input(email)
-            page.ele('text=Send').click()
-
-            print(f"✅ 浏览器ID: {seq}, 已发送验证码")
-            sleep(6)
-
-            code = checkMail(email, '')
-            if code == '没有发现匹配的邮件。':
-                sleep(6)
-                code = checkMail(email, '')
-            print(f"✅ 浏览器ID: {seq}, {code}")
-            page.ele('x://input[@name="auth_code"]').input(code)
-            page.ele('x://input[@type="checkbox"]').wait(1).click()
-            page.ele('text=Log In / Sign Up').click()
-
-        else:
-            print(f"✅ 浏览器ID: {seq}, 已处于登录状态")
-
-        icon_ele = page.ele('x://img[contains(@src, "mining_off.svg")]/..', timeout=10)
-        if icon_ele:
-            icon_ele.click()
-            sleep(3)
-            print(f"浏览器ID: {seq}, Already ON, click one times")
-        else:
-            icon_ele = page.ele('x://img[contains(@src, "mining_on.svg")]/..', timeout=10)
-            icon_ele.click()
-            icon_ele.click()
-            print(f"浏览器ID: {seq}, Already ON, click two times")
-            sleep(3)
-
-    except Exception as e:
-        print(f"❌ 浏览器ID: {seq}, 出现错误: {e}")
-    finally:
-        page.close()
-        closeBrowser(browser_id)
+# def nebulai_drission(metadata: dict):
+#     if len(metadata) < 10:
+#         return
+#
+#     browser_id = metadata['browser_id']
+#     seq = metadata['seq']
+#     email = metadata['email']
+#
+#     extension_url = f"https://nebulai.network/opencompute?invite_by=Xpgd9P"
+#
+#     co = ChromiumOptions()
+#     res = openBrowser(browser_id)
+#     co.set_address(res['data']['http'])
+#     co.set_pref('profile.default_content_setting_values.notifications', 2)
+#     chromium = Chromium(co)
+#     page = chromium.latest_tab
+#
+#     try:
+#         page.get(extension_url)
+#
+#         if page.ele('text=Sign Up/Log In'):
+#             page.ele('text=Sign Up/Log In').click()
+#             page.ele('x://input[@name="email"]').input(email)
+#             page.ele('text=Send').click()
+#
+#             print(f"✅ 浏览器ID: {seq}, 已发送验证码")
+#             sleep(6)
+#
+#             code = checkMail(email, '')
+#             if code == '没有发现匹配的邮件。':
+#                 sleep(6)
+#                 code = checkMail(email, '')
+#             print(f"✅ 浏览器ID: {seq}, {code}")
+#             page.ele('x://input[@name="auth_code"]').input(code)
+#             page.ele('x://input[@type="checkbox"]').wait(1).click()
+#             page.ele('text=Log In / Sign Up').click()
+#
+#         else:
+#             print(f"✅ 浏览器ID: {seq}, 已处于登录状态")
+#
+#         icon_ele = page.ele('x://img[contains(@src, "mining_off.svg")]/..', timeout=10)
+#         if icon_ele:
+#             icon_ele.click()
+#             sleep(3)
+#             print(f"浏览器ID: {seq}, Already ON, click one times")
+#         else:
+#             icon_ele = page.ele('x://img[contains(@src, "mining_on.svg")]/..', timeout=10)
+#             icon_ele.click()
+#             icon_ele.click()
+#             print(f"浏览器ID: {seq}, Already ON, click two times")
+#             sleep(3)
+#
+#     except Exception as e:
+#         print(f"❌ 浏览器ID: {seq}, 出现错误: {e}")
+#     finally:
+#         page.close()
+#         closeBrowser(browser_id)
 
 
 # def wardenprotocol_drission(configuration: dict):
@@ -390,10 +391,10 @@ def taker_drission(metadata: dict):
 def main():
     file_path = 'configuration/primary'  # 替换成实际路径
     # [20]
-    metadatas = get_browser_metadata(file_path)
+    metadatas = get_browser_metadata(file_path)[6:]
 
     # 设置并发线程数，比如最多同时运行 5 个任务
-    max_workers = 10
+    max_workers = 1
 
     error_seq_id = []
     if error_seq_id:
@@ -401,7 +402,7 @@ def main():
 
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         future_to_metadata = {
-            executor.submit(ruffie_drission, metadata): metadata for metadata in metadatas
+            executor.submit(nebulai_drission, metadata): metadata for metadata in metadatas
         }
 
         for future in as_completed(future_to_metadata):

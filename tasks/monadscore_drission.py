@@ -91,7 +91,7 @@ def monadscore_drission(metadata: dict):
             pass
 
         page.wait(2)
-        print(f"✅ 浏览器ID: {seq}, Today's Earning: {page.ele('x://h1[@style="font-weight: bold;"]').text}")
+        print(f"""✅ 浏览器ID: {seq}, Today's Earning: {page.ele('x://h1[@style="font-weight: bold;"]').text}""")
         page.get('https://dashboard.monadscore.xyz/tasks')
         # tasks = page.eles('text=Do Task')
         # for task in tasks:
