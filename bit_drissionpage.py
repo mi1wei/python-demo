@@ -7,6 +7,8 @@ from xinlan import checkMail
 from time import sleep
 from bit_playwright_threads import get_browser_metadata
 from chrome_extensions.okx import add_eth_wallet, choice_eth_wallet, handle_okx_popup
+from chrome_extensions.x import x_detect
+from chrome_extensions.discord import discord_detect
 from tasks.ruffie_drission import ruffie_drission
 from tasks.goblin_meme_drission import goblin_meme_drission
 from tasks.monadscore_drission import monadscore_drission
@@ -20,76 +22,6 @@ from tasks.sosovalue_drission import sosovalue_drission
 from tasks.assisterr_drission import assisterr_drission
 from tasks.nebulai_drission import nebulai_drission
 
-
-def x_detect(metadata: dict):
-    if len(metadata) < 10:
-        return
-
-    browser_id = metadata['browser_id']
-    seq = metadata['seq']
-
-    extension_url = f"https://x.com/home"
-
-    co = ChromiumOptions()
-    res = openBrowser(browser_id)
-    co.set_address(res['data']['http'])
-    co.set_pref('profile.default_content_setting_values.notifications', 2)
-    chromium = Chromium(co)
-    page = chromium.latest_tab
-
-    try:
-        page.get(extension_url)
-        tweets = page.eles('x://div[@data-testid="tweetText"]', timeout=60)
-        # for tweet in tweets:
-        #     print(tweet.text)
-        if len(tweets) > 0:
-            ele = page.ele('x://span[contains(@class, "css-1jxf684") and contains(text(), "@")]')
-            if ele:
-                print(f"✅ 浏览器ID: {seq}, X 登陆状态正常 {ele.text}, 主页帖子数量: {len(tweets)}")
-            else:
-                print(f"✅ 浏览器ID: {seq}, X 登陆状态正常, 主页帖子数量: {len(tweets)}")
-
-        else:
-            print(f"❌ 浏览器ID: {seq}, X 登陆状态异常")
-    except Exception as e:
-        print(f"❌ 浏览器ID: {seq}, 出现错误: {e}")
-    finally:
-        page.close()
-        closeBrowser(browser_id)
-
-
-def discord_detect(metadata: dict):
-    if len(metadata) < 10:
-        return
-
-    browser_id = metadata['browser_id']
-    seq = metadata['seq']
-
-    extension_url = f"https://discord.com/channels/@me"
-
-    co = ChromiumOptions()
-    res = openBrowser(browser_id)
-    co.set_address(res['data']['http'])
-    co.set_pref('profile.default_content_setting_values.notifications', 2)
-    chromium = Chromium(co)
-    page = chromium.latest_tab
-
-    try:
-        page.get(extension_url)
-        if page.eles('text=在线', timeout=60):
-            ele = page.ele('x://div[contains(@class, "hovered__")]')
-            if ele:
-                print(f"✅ 浏览器ID: {seq} , Discord {ele.text} 登陆状态正常")
-            else:
-                print(f"✅ 浏览器ID: {seq}, Discord 登陆状态正常")
-
-        else:
-            print(f"❌ 浏览器ID: {seq}, Discord 登陆状态异常")
-    except Exception as e:
-        print(f"❌ 浏览器ID: {seq}, 出现错误: {e}")
-    finally:
-        page.close()
-        closeBrowser(browser_id)
 
 
 # def nebulai_drission(metadata: dict):
@@ -214,7 +146,6 @@ def discord_detect(metadata: dict):
 #     finally:
 #         page.close()
 #         closeBrowser(browser_id)
-
 
 def nebulai2_drission(metadata: dict):
     if len(metadata) < 10:
@@ -391,10 +322,10 @@ def taker_drission(metadata: dict):
 def main():
     file_path = 'configuration/primary'  # 替换成实际路径
     # [20]
-    metadatas = get_browser_metadata(file_path)[6:]
+    metadatas = get_browser_metadata(file_path)
 
     # 设置并发线程数，比如最多同时运行 5 个任务
-    max_workers = 1
+    max_workers = 10
 
     error_seq_id = []
     if error_seq_id:
@@ -402,7 +333,7 @@ def main():
 
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         future_to_metadata = {
-            executor.submit(nebulai_drission, metadata): metadata for metadata in metadatas
+                executor.submit(x_detect, metadata): metadata for metadata in metadatas
         }
 
         for future in as_completed(future_to_metadata):

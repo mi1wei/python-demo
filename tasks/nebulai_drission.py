@@ -20,6 +20,8 @@ def nebulai_drission(metadata: dict):
     chromium = Chromium(co)
     page = chromium.latest_tab
 
+    choice_eth_wallet(chromium.new_tab(), metadata, 0)
+
     try:
         page.get(extension_url)
 
@@ -55,6 +57,8 @@ def nebulai_drission(metadata: dict):
         claims = page.eles('x://div[text()="Go"]')
         print(f"浏览器ID: {seq}, 当前有{len(claims)} 社交任务")
 
+        if len(claims) == 0:
+            return
         x_oauth = claims[0]
         x_oauth.wait(1).click()
         if page.ele('text=Link', timeout=5):
