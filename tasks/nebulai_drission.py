@@ -20,7 +20,7 @@ def nebulai_drission(metadata: dict):
     chromium = Chromium(co)
     page = chromium.latest_tab
 
-    choice_eth_wallet(chromium.new_tab(), metadata, 0)
+    choice_eth_wallet(chromium.new_tab(), metadata, 1)
 
     try:
         page.get(extension_url)
