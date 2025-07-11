@@ -1,11 +1,8 @@
-import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from DrissionPage._pages.chromium_page import ChromiumPage
 from DrissionPage import Chromium, ChromiumOptions
 from bit_api import *
 from xinlan import checkMail
-from time import sleep
-from bit_playwright_threads import get_browser_metadata
+from base.browser import get_browser_metadata
 from chrome_extensions.okx import add_eth_wallet, choice_eth_wallet, handle_okx_popup
 from chrome_extensions.x import x_detect
 from chrome_extensions.discord import discord_detect
@@ -14,14 +11,18 @@ from tasks.goblin_meme_drission import goblin_meme_drission
 from tasks.monadscore_drission import monadscore_drission
 from tasks.shelby_drission import shelby_drission
 from tasks.pharosnetwork_drission import pharosnetwork_drission
-from tasks.wardenprotocol_drission import  wardenprotocol_drission
+from tasks.wardenprotocol_drission import wardenprotocol_drission
 from tasks.onefootball_drission import onefootball_drission
 from tasks.zkverify import zkverify_drission
 from chrome_extensions.yescaptcha import yescaptcha_drission
 from tasks.sosovalue_drission import sosovalue_drission
 from tasks.assisterr_drission import assisterr_drission
 from tasks.nebulai_drission import nebulai_drission
+from tasks.vibes_drission import vibes_drission
+from tasks.snoonaut_drission import snoonaut_drission
+from base.error import error_browser_seq
 
+from tasks import tasks
 
 
 # def nebulai_drission(metadata: dict):
@@ -257,6 +258,7 @@ def cess_drission(metadata: dict):
         page.close()
         closeBrowser(browser_id)
 
+
 def find_okx_tab(chromium: Chromium, retry: int = 5, interval: float = 1.0):
     """最多重试 retry 次查找 OKX 插件页"""
     for attempt in range(retry):
@@ -317,7 +319,27 @@ def taker_drission(metadata: dict):
             print(f"⚠️ 浏览器ID: {seq}, 清理失败: {e}")
 
 
+def run_task_in_parallel(func, metadatas, max_workers, func_name="任务"):
+    """通用函数：并发执行某个任务函数"""
+    error_browser_seq.clear()
 
+    print(f"🚀 开始并发执行：{func_name}（总计 {len(metadatas)} 个任务）")
+
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        future_to_metadata = {
+            executor.submit(func, metadata): metadata for metadata in metadatas
+        }
+
+        for future in as_completed(future_to_metadata):
+            metadata = future_to_metadata[future]
+            try:
+                future.result()
+                # print(f"✅ [{func_name}] 浏览器ID: {metadata['seq']} 执行成功")
+            except Exception as exc:
+                print(f"❌ [{func_name}] 浏览器ID: {metadata['seq']} 执行出错: {exc}")
+
+    if error_browser_seq:
+        print(f"❌ [{func_name}] 操作失败的浏览器ID列表: {error_browser_seq}")
 
 def main():
     file_path = 'configuration/primary'  # 替换成实际路径
@@ -325,23 +347,26 @@ def main():
     metadatas = get_browser_metadata(file_path)
 
     # 设置并发线程数，比如最多同时运行 5 个任务
-    max_workers = 10
+    max_workers = 1
 
     error_seq_id = []
     if error_seq_id:
         metadatas = [metadata for metadata in metadatas if metadata['seq'] in error_seq_id]
 
-    with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        future_to_metadata = {
-                executor.submit(x_detect, metadata): metadata for metadata in metadatas
-        }
+    for task_name, func in tasks:
+        run_task_in_parallel(func, metadatas, max_workers, task_name)
 
-        for future in as_completed(future_to_metadata):
-            metadata = future_to_metadata[future]
-            try:
-                future.result()
-            except Exception as exc:
-                print(f"❌ 浏览器ID: {metadata['seq']}, 执行出错: {exc}")
+    # with ThreadPoolExecutor(max_workers=max_workers) as executor:
+    #     future_to_metadata = {
+    #         executor.submit(snoonaut_drission, metadata): metadata for metadata in metadatas
+    #     }
+    #
+    #     for future in as_completed(future_to_metadata):
+    #         metadata = future_to_metadata[future]
+    #         try:
+    #             future.result()
+    #         except Exception as exc:
+    #             print(f"❌ 浏览器ID: {metadata['seq']}, 执行出错: {exc}")
 
 
 if __name__ == "__main__":
