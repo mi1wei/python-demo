@@ -27,49 +27,56 @@ def assisterr_drission(metadata: dict):
 
     try:
         page.get(extension_url)
+        page.refresh()
+        page.wait(10)
 
-        come_back = page.ele('text=Come back in ', timeout=30)
+        come_back = page.ele('text=Come back in ', timeout=10)
         if come_back:
             print(f'签到任务今天已经做过了 浏览器ID: {seq}')
         else:
-            page.ele('text=Grab Daily Tokens', timeout=50, state='attached').click()
+            page.ele('text=Grab Daily Tokens', timeout=10).click('js')
             print(f"浏览器ID: {seq}, 点击了 Grab Daily Tokens")
+            page.wait(10)
 
-        buttons = page.eles('x://button[.//p[text()="$ASRR"]]')
-        count = len(buttons)
+        page.wait(1)
 
-        for button in buttons:
-            button.click()
 
-        if count == 2:
-            for i in range(count - 1):
-                buttons[i].click()
-                page.ele('text=授权应用', timeout=60000).click()
-                page.ele('text=Discord Auth', timeout=60000).click()
-                page.ele('text=Assister Incentive', timeout=60000).click()
 
-                # 等待滚动并执行自定义脚本
-                page.run_js('''() => {
-                                   const div = document.querySelector('.content__49fc1');
-                                   if (div) {
-                                       div.scrollTop = div.scrollHeight;
-                                       console.log('已滚动到底部');
-                                   }
-                               }''')
+        # buttons = page.eles('x://button[.//p[text()="$ASRR"]]')
+        # count = len(buttons)
+        #
+        # for button in buttons:
+        #     button.click()
 
-                page.ele('text=授权', timeout=30000).click()
-                page.ele('text=Start building', timeout=30000).click()
-
-        else:
-            pass
-            # for i in range(count):
-            #     if i == 0:
-            #         try:
-            #             buttons[i].click()
-            #             page.ele('text=授权应用', timeout=60000).click()
-            #             page.get("https://build.assisterr.ai/dashboard")  # Reload
-            #         except Exception as e:
-            #            pass
+        # if count == 2:
+        #     for i in range(count - 1):
+        #         buttons[i].click()
+        #         page.ele('text=授权应用', timeout=60000).click()
+        #         page.ele('text=Discord Auth', timeout=60000).click()
+        #         page.ele('text=Assister Incentive', timeout=60000).click()
+        #
+        #         # 等待滚动并执行自定义脚本
+        #         page.run_js('''() => {
+        #                            const div = document.querySelector('.content__49fc1');
+        #                            if (div) {
+        #                                div.scrollTop = div.scrollHeight;
+        #                                console.log('已滚动到底部');
+        #                            }
+        #                        }''')
+        #
+        #         page.ele('text=授权', timeout=30000).click()
+        #         page.ele('text=Start building', timeout=30000).click()
+        #
+        # else:
+        #     pass
+        #     # for i in range(count):
+        #     #     if i == 0:
+        #     #         try:
+        #     #             buttons[i].click()
+        #     #             page.ele('text=授权应用', timeout=60000).click()
+        #     #             page.get("https://build.assisterr.ai/dashboard")  # Reload
+        #     #         except Exception as e:
+        #     #            pass
     except Exception as e:
         print(f"❌ 浏览器ID: {seq}, 出现错误: {e}")
     finally:
