@@ -3,7 +3,7 @@ from base.error import error_browser_seq
 from DrissionPage import Chromium, ChromiumOptions
 
 
-def login(metadata: dict):
+def google_email_login(metadata: dict):
     browser_id = metadata['browser_id']
     seq = metadata['seq']
     username = metadata['google_username']
@@ -27,8 +27,8 @@ def login(metadata: dict):
         if page.ele('text=登录', timeout=30):
             page.ele('text=登录').wait(1).click('js')
 
-            if page.ele('x://input[@aria-label="电子邮件地址或电话号码"]', timeout=30):
-                page.ele('x://input[@aria-label="电子邮件地址或电话号码"]').wait(1).input(username)
+            if page.ele('x://input[@aria-label="邮箱或电话号码"]', timeout=30):
+                page.ele('x://input[@aria-label="邮箱或电话号码"]').wait(1).input(username)
 
             if page.ele('text=下一步', timeout=30):
                 page.ele('text=下一步').wait(1).click()
@@ -46,8 +46,6 @@ def login(metadata: dict):
 
             if 'mail.google.com/mail/' in page.url:
                 print(f"✅ 浏览器ID: {seq}, {username} goolge 邮箱登陆成功")
-
-
 
     except Exception as e:
         print(f"❌ 浏览器ID: {seq}, 操作过程中发生错误: {e}")

