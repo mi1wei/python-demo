@@ -49,11 +49,12 @@ def x_detect(metadata: dict):
                 print(f"✅ 浏览器ID: {seq}, X 登陆状态正常 {ele.text}, 主页帖子数量: {len(tweets)}")
             else:
                 print(f"✅ 浏览器ID: {seq}, X 登陆状态正常, 主页帖子数量: {len(tweets)}")
-
         else:
             print(f"❌ 浏览器ID: {seq}, X 登陆状态异常")
+            error_browser_seq.append(seq)
     except Exception as e:
         print(f"❌ 浏览器ID: {seq}, 出现错误: {e}")
+        error_browser_seq.append(seq)
     finally:
         page.close()
         closeBrowser(browser_id)
