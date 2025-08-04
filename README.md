@@ -9,3 +9,6 @@ chrome extensions
 - https://chromewebstore.google.com/detail/okx-wallet/mcohilncbfahbmgdjkbpemcciiolgcge
 - https://chromewebstore.google.com/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn
 - https://chromewebstore.google.com/detail/yescaptcha-%E4%BA%BA%E6%9C%BA%E5%8A%A9%E6%89%8B/jiofmdifioeejeilfkpegipdjiopiekl
+
+
+ pyinstaller --onefile --add-data ".\\configuration\\primary\\*;.\\configuration\\primary" .\bit_drissionpage.py

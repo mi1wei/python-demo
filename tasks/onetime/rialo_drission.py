@@ -4,6 +4,7 @@ from base.error import error_browser_seq
 from chrome_extensions.okx import add_eth_wallet, choice_eth_wallet, handle_okx_popup, handle_okx
 
 
+# 2,9,21,23,42,48,59,66,70,68,61,64,75,86,89
 def rialo_drission(metadata: dict):
     if len(metadata) < 10:
         return
@@ -25,9 +26,9 @@ def rialo_drission(metadata: dict):
         page.get(extension_url)
         if page.ele('Join waitlist', timeout=10):
             page.ele('Join waitlist', timeout=10).wait(1).click('js')
-            if page.ele('text=Your spot on the waitlist is confirmed', timeout=10):
-                print(f"✅ 浏览器ID: {seq}, Join waitlist success")
-                return
+            # if page.ele("text=Your spot on the waitlist is confirmed. We'll keep you posted with next steps and early access updates soon.",timeout=10):
+            #     print(f"✅ 浏览器ID: {seq}, Join waitlist success")
+            #     return
 
             if page.ele('x://input[@placeholder="Enter your full name"]', timeout=10):
                 page.ele('x://input[@placeholder="Enter your full name"]').input(email.split('@')[0])

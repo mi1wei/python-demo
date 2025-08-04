@@ -27,11 +27,12 @@ def discord_detect(metadata: dict):
                 print(f"✅ 浏览器ID: {seq} , Discord {ele.text} 登陆状态正常")
             else:
                 print(f"✅ 浏览器ID: {seq}, Discord 登陆状态正常")
-
         else:
             print(f"❌ 浏览器ID: {seq}, Discord 登陆状态异常")
+            error_browser_seq.append(seq)
     except Exception as e:
         print(f"❌ 浏览器ID: {seq}, 出现错误: {e}")
+        error_browser_seq.append(seq)
     finally:
         page.close()
         closeBrowser(browser_id)

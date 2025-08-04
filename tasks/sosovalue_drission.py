@@ -1,6 +1,7 @@
 from DrissionPage import Chromium, ChromiumOptions
 from bit_api import *
 from chrome_extensions.okx import add_eth_wallet, choice_eth_wallet, handle_okx_popup
+import traceback
 
 
 def sosovalue_drission(metadata: dict):
@@ -22,15 +23,19 @@ def sosovalue_drission(metadata: dict):
 
     try:
         page.get(extension_url)
-        if page.ele('text=注册', timeout=10):
-            page.ele('text=注册').wait(1).click()
-            page.ele('text=成功！', timeout=60)
-            if page.ele('text=Twitter'):
-                page.ele('text=Twitter').wait(1).click()
+        max_attempts = 3
+        for attempt in range(max_attempts):
+            page.wait(10)
+            if not page.ele('text=注册', timeout=5):
+                break
+            if page.ele('text=注册', timeout=30):
+                page.ele('text=注册').wait(1).click('js')
+                page.ele('text=成功！', timeout=60)
+                if page.ele('text=Twitter'):
+                    page.ele('text=Twitter').wait(1).click()
+                    page.wait(30)
+                page.get(extension_url)
                 page.wait(30)
-
-            page.get(extension_url)
-            page.wait(30)
 
         # if page.ele('x://div[@id="go_exp"]', timeout=60) == None:
         #     print(f"❌ 浏览器ID: {seq}, 未登陆")
@@ -42,49 +47,59 @@ def sosovalue_drission(metadata: dict):
         #     print(f"❌ 浏览器ID: {seq}, 切换语言到中文")
         #     return
 
+        if page.ele('x://span[contains(text(), "Exp")]', timeout=5):
+            exp = page.ele('x://span[contains(text(), "Exp")]').text
+
+        listen = page.ele('x://button[.//span[text()="立即收听"]]', timeout=5)
+        # if page.ele('text=点赞',timeout=5):
+        if listen:
+            listen.wait(1).click('js')
+            page.get(extension_url)
+            page.wait(10)
+
         like = page.ele('x://button[.//span[text()="点赞"]]', timeout=5)
         # if page.ele('text=点赞',timeout=5):
         if like:
             like.wait(1).click('js')
 
-        watch = page.ele('x://button[.//span[text()="观看"]]', timeout=5)        # if page.ele('text=观看',timeout=5):
-        if watch:
-            watch.wait(1).click('js')
-
         share = page.ele('x://button[.//span[text()="分享"]]', timeout=5)
         if share:
             share.wait(1).click('js')
 
-        page.refresh()
-        page.wait(10)
+        # yinyong = page.ele('x://button[.//span[text()="引用"]]', timeout=5)
+        # if yinyong:
+        #     yinyong.wait(1).click('js')
+        #
+        # huifu = page.ele('x://button[.//span[text()="回复"]]', timeout=5)
+        # if huifu:
+        #     huifu.wait(1).click('js')
 
-        validations = page.eles('x://button[.//span[text()="验证"]]', timeout=5)
-        for validation in validations:
-            validation.click('js')
-        page.wait(10)
+        if like or listen or share:
+            pass
+        else:
+            print(f'✅ 浏览器ID: {seq}, 今日任务已经做完, {exp}')
+            return
 
-        # 加入SoDEX测试网白名单
-        join_btn = page.ele('x://div[@id="JOIN_SODEX_TESTNET_WHITELIST"]')
-        is_join = False
-        if join_btn:
-            if join_btn.html.__contains__('完成'):
-                print(f'✅ 浏览器ID: {seq}, 成功 -> 加入SoDEX测试网白名单')
-                is_join = True
-            else:
-                if join_btn.ele('text=加入', timeout=5):
-                    join_btn.ele('text=加入').click()
-                    print(f'✅ 浏览器ID: {seq}, 加入 -> 加入SoDEX测试网白名单')
+        if page.ele('text=关注'):
+            page.ele('text=关注').click()
+            print(f'✅ 浏览器ID: {seq}, 关注博客成功, {exp}')
 
-        if is_join == False:
+
+        for i in range(10):
             page.refresh()
-            join_btn = page.ele('x://div[@id="JOIN_SODEX_TESTNET_WHITELIST"]')
-            if join_btn:
-                if join_btn.ele('text=验证', timeout=60):
-                    join_btn.ele('text=验证').click()
-                print(f'✅ 浏览器ID: {seq}, 验证 -> 加入SoDEX测试网白名单')
+            page.wait(10)
+            validations = page.eles('x://button[.//span[text()="验证"]]', timeout=5)
+            if validations:
+                print(f'✅ 浏览器ID: {seq}, {len(validations)}个验证错误')
+                for validation in validations:
+                    validation.click('js')
+            else:
+                print(f'✅ 浏览器ID: {seq}, 今日任务已经做完, 无需要验证的任务 3, {exp}')
+                return
         page.wait(10)
     except Exception as e:
         print(f"❌ 浏览器ID: {seq}, 出现错误: {e}")
+        traceback.print_exc()
     finally:
         page.close()
         closeBrowser(browser_id)
