@@ -41,8 +41,16 @@ def mawariportal_drission(metadata: dict):
             if page.ele('text=Next', timeout=30):
                 page.ele('text=Next', timeout=10).wait(1).click('js')
 
-            if page.ele("text=Let's go", timeout=30):
-                page.ele("text=Let's go", timeout=10).wait(1).click('js')
+        buttons = page.eles('text=Let\'s go', timeout=30)
+        for button in buttons:
+            button.wait(2).click('js')
+
+        verifys = page.eles('text=Verify', timeout=30)
+        for button in verifys:
+            button.wait(2).click('js')
+            # count = len(buttons)
+            # if page.ele("text=Let's go", timeout=30):
+            #     page.ele("text=Let's go").wait(1).click('js')
         page.wait(5)
     except Exception as e:
         print(f"❌ 浏览器ID: {seq}, 出现错误: {e}")

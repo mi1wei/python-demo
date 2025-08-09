@@ -11,6 +11,7 @@ def rom_drission(metadata: dict):
     browser_id = metadata['browser_id']
     seq = metadata['seq']
     email = metadata['google_username']
+    password = metadata['google_password']
 
     extension_url = f"https://event.wemixplay.com/rom-wp?inviteCode=C0A0F376"
     url2 = f'https://romgoldenage.com/event02'
@@ -54,7 +55,6 @@ def rom_drission(metadata: dict):
         #         if page.ele('x://input[@name="nickname"]', timeout=60):
         #             page.ele('x://input[@name="nickname"]').input(email.lower().split('@')[0][:12])
 
-
         # 预注册任务
         # page.get('https://romgoldenage.com/pre-registration')
         # if page.ele('x://input[@type="checkbox"]', timeout=60):
@@ -75,7 +75,7 @@ def rom_drission(metadata: dict):
         page.get(url2)
         if page.ele("text=Check My Mission Progress"):
             page.ele("text=Check My Mission Progress").wait(1).click('js')
-            if page.ele("text=Sign in with Google"):
+            if page.ele("text=Sign in with Google", timeout=30):
                 page.ele("text=Sign in with Google").wait(1).click('js')
                 page.wait(5)
                 auth_google_tab = chromium.get_tab(url='accounts.google.com')
@@ -85,6 +85,17 @@ def rom_drission(metadata: dict):
                 page.get(url3)
                 if page.ele("text=Check In Now"):
                     page.ele("text=Check In Now").wait(1).click('js')
+
+            # if page.ele("text=使用 Google 账号登录", timeout=30):
+            #     page.ele("text=使用 Google 账号登录").wait(1).click('js')
+            #     page.wait(5)
+            #     auth_google_tab = chromium.get_tab(url='accounts.google.com')
+            #     if auth_google_tab:
+            #         auth_google_tab.ele('x://div[@class="r4WGQb"]//ul/li[1]').click()
+            #         if auth_google_tab.ele('x://input[@aria-label="输入您的密码"]', timeout=30):
+            #             auth_google_tab.ele('x://input[@aria-label="输入您的密码"]').wait(1).input(password)
+            #             if auth_google_tab.ele('text=下一步', timeout=10):
+            #                 auth_google_tab.ele('text=下一步').wait(1).click()
 
         page.wait(1)
     except Exception as e:

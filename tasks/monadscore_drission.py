@@ -92,15 +92,16 @@ def monadscore_drission(metadata: dict):
 
         page.wait(2)
         print(f"""✅ 浏览器ID: {seq}, Today's Earning: {page.ele('x://h1[@style="font-weight: bold;"]').text}""")
+
         page.get('https://dashboard.monadscore.xyz/tasks')
-        # tasks = page.eles('text=Do Task')
-        # for task in tasks:
-        #     task.wait(1).click()
-        #
-        # claims = page.eles('text=Claim')
-        # print(f"浏览器ID: {seq}, 当前有{len(claims)} 社交任务")
-        # for claim in claims:
-        #     claim.wait(1).click()
+        tasks = page.eles('text=Do Task')
+        for task in tasks:
+            task.wait(1).click()
+
+        claims = page.eles('text=Claim')
+        print(f"浏览器ID: {seq}, 当前有{len(claims)} 社交任务")
+        for claim in claims:
+            claim.wait(1).click()
 
         if page.ele('text=Check In', timeout=2):
             print(f"浏览器ID: {seq}， 点击 Chech In")

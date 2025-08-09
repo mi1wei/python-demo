@@ -62,19 +62,23 @@ def sosovalue_drission(metadata: dict):
         if like:
             like.wait(1).click('js')
 
+        look = page.ele('x://button[.//span[text()="观看"]]', timeout=5)
+        if look:
+            look.wait(1).click('js')
+
         share = page.ele('x://button[.//span[text()="分享"]]', timeout=5)
         if share:
             share.wait(1).click('js')
 
-        # yinyong = page.ele('x://button[.//span[text()="引用"]]', timeout=5)
-        # if yinyong:
-        #     yinyong.wait(1).click('js')
-        #
-        # huifu = page.ele('x://button[.//span[text()="回复"]]', timeout=5)
-        # if huifu:
-        #     huifu.wait(1).click('js')
+        yinyong = page.ele('x://button[.//span[text()="引用"]]', timeout=5)
+        if yinyong:
+            yinyong.wait(1).click('js')
 
-        if like or listen or share:
+        huifu = page.ele('x://button[.//span[text()="回复"]]', timeout=5)
+        if huifu:
+            huifu.wait(1).click('js')
+
+        if like or listen or share or yinyong or huifu or look:
             pass
         else:
             print(f'✅ 浏览器ID: {seq}, 今日任务已经做完, {exp}')

@@ -1,7 +1,7 @@
 from DrissionPage import Chromium, ChromiumOptions
 from bit_api import *
 from chrome_extensions.okx import add_eth_wallet, choice_eth_wallet, handle_okx_popup, handle_okx
-
+from base.error import error_browser_seq
 
 # BILLIONS500K
 # SENTIENTXBILLIONS
@@ -39,16 +39,30 @@ def billions_drission(metadata: dict):
                     box.wait(1).click('js')
                 if page.ele('text=I agree', timeout=10):
                     page.ele('text=I agree').wait(1).click('js')
-        if page.ele("text=Login with Twitter", timeout=30):
-            page.ele("text=Login with Twitter").wait(1).click('js')
-            if page.ele('x://input[@value="授权应用程序"]', timeout=60):
-                page.ele('x://input[@value="授权应用程序"]').wait(1).click('js')
-            if page.ele('text=GO TO DASHBOARD', timeout=60):
-                page.ele('text=GO TO DASHBOARD').wait(1).click('js')
-                print(f"✅ 浏览器ID: {seq}, GO TO DASHBOARD")
+
+        # 签到
+        if page.ele('text=Click & Earn ', timeout=10):
+            page.ele('text=Click & Earn ').wait(1).click('js')
+            print(f'✅ 浏览器ID: {seq}, Dally Reward')
+
+
+
+        if page.ele('x://input[@placeholder="Enter code"]', timeout=60):
+            codes = [
+                "BILLIONS500K",
+                "SENTIENTXBILLIONS",
+                "BILLIONS400POINTS"
+            ]
+            for code in codes:
+                code_input = page.ele('x://input[@placeholder="Enter code"]').clear()
+                code_input.input(code)
+                page.ele('text=Apply').wait(1).click('js')
+                page.wait(5)
+
         page.wait(10)
     except Exception as e:
         print(f"❌ 浏览器ID: {seq}, 出现错误: {e}")
+        error_browser_seq.append(seq)
     finally:
         page.close()
         closeBrowser(browser_id)
