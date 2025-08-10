@@ -107,7 +107,14 @@ def monadscore_drission(metadata: dict):
             print(f"浏览器ID: {seq}， 点击 Chech In")
             page.ele('text=Check In').wait(1).click()
 
-        page.wait(5)
+
+        if page.ele('text=Do task', timeout=2):
+            print(f"浏览器ID: {seq}， 点击 Do task")
+            page.ele('text=Do task').wait(1).click()
+            page.ele('text=Join Lucky discord').wait(1).click()
+            page.ele('text=Claim ').wait(1).click()
+
+        page.wait(10)
 
     except Exception as e:
         print(f"❌ 浏览器ID: {seq}, 出现错误: {e}")
