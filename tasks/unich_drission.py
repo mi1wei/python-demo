@@ -6,7 +6,7 @@ from base.error import error_browser_seq
 # BILLIONS500K
 # SENTIENTXBILLIONS
 # BILLIONS400POINTS
-def billions_drission(metadata: dict):
+def unich_drission(metadata: dict):
     if len(metadata) < 10:
         return
 
@@ -14,7 +14,7 @@ def billions_drission(metadata: dict):
     seq = metadata['seq']
     email = metadata['email']
 
-    extension_url = f"https://signup.billions.network?rc=EUKZZZF4"
+    extension_url = f"https://unich.com/en/airdrop/sign-up?ref=GeWM8Ozf3G"
 
     co = ChromiumOptions()
     res = openBrowser(browser_id)
@@ -39,26 +39,6 @@ def billions_drission(metadata: dict):
                     box.wait(1).click('js')
                 if page.ele('text=I agree', timeout=10):
                     page.ele('text=I agree').wait(1).click('js')
-
-        # 签到
-        if page.ele('text=Click & Earn ', timeout=10):
-            page.ele('text=Click & Earn ').wait(1).click('js')
-            print(f'✅ 浏览器ID: {seq}, Dally Reward')
-
-
-
-        if page.ele('x://input[@placeholder="Enter code"]', timeout=60):
-            codes = [
-                "BILLIONS500K",
-                "SENTIENTXBILLIONS",
-                "BILLIONS400POINTS"
-            ]
-            for code in codes:
-                code_input = page.ele('x://input[@placeholder="Enter code"]').clear()
-                code_input.input(code)
-                page.ele('text=Apply').wait(1).click('js')
-                page.wait(5)
-
         page.wait(10)
     except Exception as e:
         print(f"❌ 浏览器ID: {seq}, 出现错误: {e}")

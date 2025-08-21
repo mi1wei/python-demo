@@ -3,10 +3,7 @@ from bit_api import *
 from chrome_extensions.okx import add_eth_wallet, choice_eth_wallet, handle_okx_popup, handle_okx
 from base.error import error_browser_seq
 
-# BILLIONS500K
-# SENTIENTXBILLIONS
-# BILLIONS400POINTS
-def unich_drission(metadata: dict):
+def bubuverse_drission(metadata: dict):
     if len(metadata) < 10:
         return
 
@@ -14,7 +11,7 @@ def unich_drission(metadata: dict):
     seq = metadata['seq']
     email = metadata['email']
 
-    extension_url = f"https://unich.com/en/airdrop/sign-up?ref=GeWM8Ozf3G"
+    extension_url = f"https://bubuverse.fun?ref=GQtGNoGVKxaoBWwqtyDwPKywETFhkGSkehkG4EF7oFZ4"
 
     co = ChromiumOptions()
     res = openBrowser(browser_id)
@@ -23,41 +20,19 @@ def unich_drission(metadata: dict):
     chromium = Chromium(co)
     page = chromium.latest_tab
 
+    choice_eth_wallet(chromium.new_tab(), metadata, 1)
+
     try:
         page.get(extension_url)
-        if page.ele('text=Continue with Google', timeout=10):
-            page.ele('text=Continue with Google').wait(1).click('js')
-            page.wait(5)
-            auth_google_tab = chromium.get_tab(url='accounts.google.com')
-            if auth_google_tab:
-                auth_google_tab.ele('x://div[@class="r4WGQb"]//ul/li[1]').click()
-                auth_google_tab.wait(3)
-                if auth_google_tab.ele('text=Continue', timeout=60):
-                    auth_google_tab.ele('text=Continue').wait(1).click('js')
-                checkboxs = page.eles('x://input[@type="checkbox"]', timeout=60)
-                for box in checkboxs:
-                    box.wait(1).click('js')
-                if page.ele('text=I agree', timeout=10):
-                    page.ele('text=I agree').wait(1).click('js')
+        if page.ele('text=Connect Wallet', timeout=10):
+            page.ele('text=Connect Wallet').wait(1).click('js')
+            if page.ele('text=OKX Wallet', timeout=10):
+                if handle_okx_popup(page, seq) == False:
+                    print(f"❌ 浏览器ID: {seq}, handle_okx_popup 出现错误")
 
-        # 签到
-        if page.ele('text=Click & Earn ', timeout=10):
-            page.ele('text=Click & Earn ').wait(1).click('js')
-            print(f'✅ 浏览器ID: {seq}, Dally Reward')
-
-
-
-        if page.ele('x://input[@placeholder="Enter code"]', timeout=60):
-            codes = [
-                "BILLIONS500K",
-                "SENTIENTXBILLIONS",
-                "BILLIONS400POINTS"
-            ]
-            for code in codes:
-                code_input = page.ele('x://input[@placeholder="Enter code"]').clear()
-                code_input.input(code)
-                page.ele('text=Apply').wait(1).click('js')
-                page.wait(5)
+        page.get('https://bubuverse.fun/tasks')
+        if page.ele('text=Check in Now',timeout=30):
+            page.ele('text=Check in Now').wait(1).click('js')
 
         page.wait(10)
     except Exception as e:
