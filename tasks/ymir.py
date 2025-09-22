@@ -27,8 +27,8 @@ def ymir_drission(metadata: dict):
     try:
         # 注册任务
         page.get(extension_url)
-        if page.ele('x://button[@aria-label="PRE-REGISTER NOW"]', timeout=60):
-            page.ele('x://button[@aria-label="PRE-REGISTER NOW"]').wait(1).click('js')
+        if page.ele('text=Log In', timeout=60):
+            page.ele('text=Log In').wait(1).click('js')
 
             if page.ele("text=Continue with Google"):
                 page.ele("text=Continue with Google").wait(1).click('js')
@@ -36,22 +36,14 @@ def ymir_drission(metadata: dict):
                 auth_google_tab = chromium.get_tab(url='accounts.google.com')
                 if auth_google_tab:
                     auth_google_tab.ele('x://div[@class="r4WGQb"]//ul/li[1]').click()
+                    if auth_google_tab.ele('x://input[@aria-label="输入您的密码"]', timeout=30):
+                        auth_google_tab.ele('x://input[@aria-label="输入您的密码"]').wait(1).input(password)
+                        if auth_google_tab.ele('text=下一步', timeout=10):
+                            auth_google_tab.ele('text=下一步').wait(1).click()
                     auth_google_tab.wait(3)
-                    if auth_google_tab.ele('text=Continue',timeout=60):
-                        auth_google_tab.ele('text=Continue').wait(1).click('js')
 
-                if page.ele('text=Sign Up',timeout=60):
-                    page.ele('text=Sign Up').wait(1).click('js')
-
-                    checkboxs =  page.eles('x://input[@type="checkbox"]', timeout=60)
-                    for box in checkboxs:
-                        box.wait(1).click('js')
-
-                    if page.ele('text=Next', timeout=60):
-                        page.ele('text=Next').wait(1).click('js')
-
-                if page.ele('x://input[@name="nickname"]', timeout=60):
-                    page.ele('x://input[@name="nickname"]').input(email.lower().split('@')[0][:12])
+            page.refresh()
+            page.wait(5)
 
         # 预注册任务
         # page.get('https://romgoldenage.com/pre-registration')
