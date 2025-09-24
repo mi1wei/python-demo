@@ -1,7 +1,7 @@
 from DrissionPage import Chromium, ChromiumOptions
 from bit_api import *
-from chrome_extensions.okx import add_eth_wallet, choice_eth_wallet, handle_okx_popup, handle_okx
-
+from chrome_extensions.phantom import choice_eth_wallet,handle_okx
+from base.error import error_browser_seq
 
 def nebulai_drission(metadata: dict):
     if len(metadata) < 10:
@@ -11,7 +11,7 @@ def nebulai_drission(metadata: dict):
     seq = metadata['seq']
     email = metadata['email']
 
-    extension_url = f"https://nebulai.network/opencompute?invite_by=Xpgd9P"
+    extension_url = f"https://nebulai.network/final-test?invite_by=KveWHn"
 
     co = ChromiumOptions()
     res = openBrowser(browser_id)
@@ -28,31 +28,30 @@ def nebulai_drission(metadata: dict):
         if page.ele('text=Connect Wallet',timeout=5):
             page.ele('text=Connect Wallet').click('js')
 
+            page.wait(3)
+
             js_code = """
             const el1 = document.querySelector("w3m-modal")?.shadowRoot.querySelector('w3m-router')?.shadowRoot.querySelector('w3m-connect-view')?.shadowRoot.querySelector('w3m-wallet-login-list')?.shadowRoot.querySelector('w3m-connector-list')?.shadowRoot.querySelector('w3m-connect-announced-widget')?.shadowRoot.querySelector('wui-list-wallet');            
             el1?.click();
             """
             page.run_js(js_code)
-            page.wait(5)
-            okx_tab = chromium.get_tab(url='mcohilncbfahbmgdjkbpemcciiolgcge')
+            page.wait(3)
+            okx_tab = chromium.get_tab(url='bfnaelmomeimhlpmgjnjophhpkkoljpa')
             if okx_tab:
                 handle_okx(okx_tab, seq)
-
-
-            page.ele('x://input[@type="checkbox"]').wait(1).click()
-            page.ele('text=Log In / Sign Up').click()
+                page.wait(10)
         else:
             print(f"✅ 浏览器ID: {seq}, 已处于登录状态")
 
-        icon_ele = page.ele('x://img[contains(@src, "mining_off.svg")]/..', timeout=10)
-        if icon_ele:
-            icon_ele.click()
-            print(f"浏览器ID: {seq}, Already ON, click one times")
-        else:
-            icon_ele = page.ele('x://img[contains(@src, "mining-on.svg")]/..', timeout=10)
-            icon_ele.click()
-            icon_ele.click()
-            print(f"浏览器ID: {seq}, Already ON, click two times")
+        # icon_ele = page.ele('x://img[contains(@src, "mining_off.svg")]/..', timeout=10)
+        # if icon_ele:
+        #     icon_ele.click()
+        #     print(f"浏览器ID: {seq}, Already ON, click one times")
+        # else:
+        #     icon_ele = page.ele('x://img[contains(@src, "mining-on.svg")]/..', timeout=10)
+        #     icon_ele.click()
+        #     icon_ele.click()
+        #     print(f"浏览器ID: {seq}, Already ON, click two times")
 
         claims = page.eles('x://div[text()="Go"]')
         print(f"浏览器ID: {seq}, 当前有{len(claims)} 社交任务")
@@ -77,6 +76,7 @@ def nebulai_drission(metadata: dict):
 
     except Exception as e:
         print(f"❌ 浏览器ID: {seq}, 出现错误: {e}")
+        error_browser_seq.append(seq)
     finally:
         page.close()
         closeBrowser(browser_id)

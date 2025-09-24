@@ -63,3 +63,74 @@ def add_solana_wallet(metadata: dict):
             closeBrowser(browser_id)
         except Exception as e:
             print(f"⚠️ 执行 closeBrowser({browser_id}) 失败: {e}")
+
+def choice_eth_wallet(page, metadata: dict, index):
+    seq = metadata['seq']
+    extension_url = "chrome-extension://bfnaelmomeimhlpmgjnjophhpkkoljpa/popup.html"
+    page.get(extension_url)
+    try:
+
+        if page.ele('x://input[@placeholder="密码"]', timeout=5):
+            page.ele('x://input[@placeholder="密码"]').wait(1).input('12345678')
+            if page.ele('text=解锁'):
+                page.ele('text=解锁').click()
+                print(f"✅ 浏览器ID: {seq}, 导入solana钱包成功")
+
+
+    except Exception as e:
+        print(f"❌ 浏览器ID: {seq}, 操作过程中发生错误: {e}")
+        error_browser_seq.append(seq)
+    finally:
+        try:
+            page.close()
+        except Exception as e:
+            print(f"⚠️ 浏览器ID: {seq}, 关闭页面失败: {e}")
+
+def safe_click_for_new_tab(ele, timeout=3):
+    try:
+        return ele.wait(1).click.for_new_tab(timeout=timeout)
+    except Exception as e:
+        return None
+
+def handle_okx(okx_tab, seq, selector='text=Phantom Wallet'):
+    try:
+        # if okx_tab.ele('x://input[@placeholder="请输入密码"]', timeout=5):
+        #     okx_tab.ele('x://input[@placeholder="请输入密码"]').wait(1).input('12345678')
+        # if okx_tab.ele('text=解锁', timeout=1):
+        #     okx_tab.ele('text=解锁').wait(1).click()
+        # if okx_tab.ele('text=切换钱包', timeout=1):
+        #     okx_tab.ele('text=切换钱包').wait(1).click()
+        #     checkbox = okx_tab.ele('.okui-checkbox-circle')
+        #     checkbox.click()
+        #     if okx_tab.ele('text=确认', timeout=1):
+        #         okx_tab.ele('text=确认').wait(1).click()
+        #     if okx_tab.ele('text=连接', timeout=1):
+        #         okx_tab = okx_tab.ele('text=连接').wait(1).click.for_new_tab()
+
+        if okx_tab.ele('text=连接', timeout=3):
+            okx_tab =  okx_tab.ele('x://button[@type="submit"]').wait(1).click.for_new_tab(3)
+            # okx_tab = safe_click_for_new_tab(okx_tab.ele('text=连接'), timeout=3)
+        max_tries = 20
+        count = 0
+        while okx_tab is not None and count < max_tries:
+            try:
+                if okx_tab.ele('text=确认', timeout=1):
+                    confirm_btn = okx_tab.ele('text=确认', timeout=10)
+                    if not confirm_btn:
+                        break
+                    confirm_btn.wait(1).click('js')
+                    count += 1
+                else:
+                    break
+            except Exception as e:
+                error_msg = str(e)
+                if '与页面的连接已断开' in error_msg:
+                    print(f"⚠️ 浏览器ID: {seq}, 页面已关闭或连接断开，退出循环")
+                    break
+                else:
+                    print(f"❌ 浏览器ID: {seq}, 异常: {error_msg}")
+                    return False  # 或者继续处理其他逻辑
+        return True
+    except Exception as e:
+        print(f'浏览器ID: {seq}, handle_okx_popup error {e}')
+        return False
