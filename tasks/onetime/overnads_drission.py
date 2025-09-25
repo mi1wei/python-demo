@@ -25,14 +25,25 @@ def overnads_drission(metadata: dict):
 
     try:
         page.get(extension_url)
-        if page.ele('text=Twitter ', timeout=60):
+        if page.ele('text=Twitter ', timeout=10):
             page.ele('text=Twitter ', timeout=10).wait(1).click('js')
-            if page.ele('text=授权应用', timeout=5):
+            if page.ele('text=授权应用', timeout=20):
                 page.ele('text=授权应用').click()
                 page.wait(5)
             if page.ele('text= CLAIM ', timeout=5):
                 page.ele('text= CLAIM ').click()
             print(f"✅ 浏览器ID: {seq}, 登陆成功")
+
+        page.get('https://app.overnads.xyz/home')
+        if page.ele('text=CLAIM', timeout=10):
+            page.ele('text=CLAIM').click()
+            print(f"✅ 浏览器ID: {seq}, 签到成功")
+        else:
+            print(f"✅ 浏览器ID: {seq}, 签到过了")
+
+        if page.ele('text= CLAIM ', timeout=5):
+            page.ele('text= CLAIM ').click()
+
         page.wait(5)
     except Exception as e:
         print(f"❌ 浏览器ID: {seq}, 出现错误: {e}")

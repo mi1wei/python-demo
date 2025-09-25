@@ -21,7 +21,7 @@ def discord_detect(metadata: dict):
 
     try:
         page.get(extension_url)
-        if page.eles('text=在线', timeout=60):
+        if page.eles('text=在线', timeout=60) or page.eles('text=Online', timeout=60):
             ele = page.ele('x://div[contains(@class, "hovered__")]')
             if ele:
                 print(f"✅ 浏览器ID: {seq} , Discord {ele.text} 登陆状态正常")

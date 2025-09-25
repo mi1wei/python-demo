@@ -26,7 +26,7 @@ def mawariportal_drission(metadata: dict):
 
     try:
         page.get(extension_url)
-        if page.ele('text=Sign in', timeout=60):
+        if page.ele('text=Sign in', timeout=30):
             page.ele('text=Sign in', timeout=10).wait(1).click('js')
             if page.ele('text=OKX Wallet', timeout=10):
                 page.ele('text=OKX Wallet', timeout=10).wait(1).click('js')

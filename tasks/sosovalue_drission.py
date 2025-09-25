@@ -50,7 +50,7 @@ def sosovalue_drission(metadata: dict):
         if page.ele('x://span[contains(text(), "Exp")]', timeout=5):
             exp = page.ele('x://span[contains(text(), "Exp")]').text
 
-        listen = page.ele('x://button[.//span[text()="立即收听"]]', timeout=5)
+        listen = page.ele('x://button[.//span[text()="访问"]]', timeout=5)
         # if page.ele('text=点赞',timeout=5):
         if listen:
             listen.wait(1).click('js')
@@ -89,14 +89,15 @@ def sosovalue_drission(metadata: dict):
             print(f'✅ 浏览器ID: {seq}, 关注博客成功, {exp}')
 
 
-        for i in range(10):
+        for i in range(3):
             page.refresh()
             page.wait(10)
             validations = page.eles('x://button[.//span[text()="验证"]]', timeout=5)
             if validations:
-                print(f'✅ 浏览器ID: {seq}, {len(validations)}个验证错误')
+                print(f'✅ 浏览器ID: {seq}, {len(validations)}个验证任务')
                 for validation in validations:
                     validation.click('js')
+                    page.wait(5)
             else:
                 print(f'✅ 浏览器ID: {seq}, 今日任务已经做完, 无需要验证的任务 3, {exp}')
                 return

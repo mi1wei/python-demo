@@ -47,17 +47,17 @@ def billions_drission(metadata: dict):
 
 
 
-        if page.ele('x://input[@placeholder="Enter code"]', timeout=60):
-            codes = [
-                "BILLIONS500K",
-                "SENTIENTXBILLIONS",
-                "BILLIONS400POINTS"
-            ]
-            for code in codes:
-                code_input = page.ele('x://input[@placeholder="Enter code"]').clear()
-                code_input.input(code)
-                page.ele('text=Apply').wait(1).click('js')
-                page.wait(5)
+        # if page.ele('x://input[@placeholder="Enter code"]', timeout=60):
+        #     codes = [
+        #         "BILLIONS500K",
+        #         "SENTIENTXBILLIONS",
+        #         "BILLIONS400POINTS"
+        #     ]
+        #     for code in codes:
+        #         code_input = page.ele('x://input[@placeholder="Enter code"]').clear()
+        #         code_input.input(code)
+        #         page.ele('text=Apply').wait(1).click('js')
+        #         page.wait(5)
 
         page.wait(10)
     except Exception as e:
