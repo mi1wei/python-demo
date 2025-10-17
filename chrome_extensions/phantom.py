@@ -1,6 +1,7 @@
 from bit_api import *
 from base.error import error_browser_seq
 from DrissionPage import Chromium, ChromiumOptions
+import traceback
 
 
 def add_solana_wallet(metadata: dict):
@@ -76,13 +77,70 @@ def choice_eth_wallet(page, metadata: dict, index):
             if page.ele('text=解锁'):
                 page.ele('text=解锁').click()
                 # print(f"✅ 浏览器ID: {seq}, 导入solana钱包成功")
+        page.wait(5)
         btn = page.ele('x://button[@data-testid="fungible-token-row-solana-SOL"]')
-        text = btn.text.replace('\n', '').replace('-',' ')
+        text = btn.text.replace('\n', '').replace('-', ' ')
         print(f"✅ 浏览器ID: {seq},{metadata['okx_solana_address']}, {text}")
+    except Exception as e:
+        print(f"❌ 浏览器ID: {seq}, 操作过程中发生错误: {e}")
+        traceback.print_exc()
+        error_browser_seq.append(seq)
+    finally:
+        try:
+            page.close()
+        except Exception as e:
+            print(f"⚠️ 浏览器ID: {seq}, 关闭页面失败: {e}")
 
+
+def add_eth_wallet(metadata: dict):
+    browser_id = metadata['browser_id']
+    seq = metadata['seq']
+    private_key = metadata['my_okx_solana_wallet_private_key']
+
+    res = openBrowser(browser_id)
+    http_addr = res['data']['http']
+    # 初始化 DrissionPage 浏览器连接
+    co = ChromiumOptions()
+    res = openBrowser(browser_id)
+    co.set_address(res['data']['http'])
+    co.set_pref('profile.default_content_setting_values.notifications', 2)
+    chromium = Chromium(co)
+    page = chromium.latest_tab
+
+    extension_url = "chrome-extension://bfnaelmomeimhlpmgjnjophhpkkoljpa/popup.html"
+    page.get(extension_url)
+    try:
+        if page.ele('x://input[@placeholder="密码"]', timeout=5):
+            page.ele('x://input[@placeholder="密码"]').wait(1).input('12345678')
+            if page.ele('text=解锁'):
+                page.ele('text=解锁').click()
+                # print(f"✅ 浏览器ID: {seq}, 导入solana钱包成功")
+
+        page.ele('x://button[@data-testid="settings-menu-open-button"]').wait(5).click()
+        page.wait(1)
+        accounts_div = page.ele('#accounts')
+        buttons = accounts_div.eles('t:button')
+        wallet_names = [btn.eles('t:div')[-1].text for btn in buttons]
+        # print(f"✅ 浏览器ID: {seq}, {wallet_names}")
+        if len(wallet_names) >= 2:
+            account = page.ele('x://div[@data-testid="home-header-account-name"]').text
+            if account == "solana":
+                buttons[1].click()
+                account = page.ele('x://div[@data-testid="home-header-account-name"]').text
+            print(f"✅ 浏览器ID: {seq}, 当前账户 {account}")
+            return
+        page.ele('x://button[@data-testid="sidebar_menu-button-add_account"]').click()
+        page.wait(1)
+        page.ele('text=导入私钥').click()
+        page.ele('x://input[@name="name"]').input('solana2')
+        page.ele('x://textarea[@placeholder="私钥"]').input(private_key)
+        page.ele('text=导入').click()
+        print(f"✅ 浏览器ID: {seq}, 添加新钱包成功")
+        page.wait(1)
 
     except Exception as e:
         print(f"❌ 浏览器ID: {seq}, 操作过程中发生错误: {e}")
+        traceback.print_exc()
         error_browser_seq.append(seq)
     finally:
         try:
