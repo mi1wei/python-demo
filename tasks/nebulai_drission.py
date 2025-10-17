@@ -25,25 +25,40 @@ def nebulai_drission(metadata: dict):
     # open_devnet(chromium.new_tab(), metadata)
 
     try:
-        # page.get(extension_url)
+        page.get(extension_url)
 
+        ## Logout
         # if page.ele('text=Connect Wallet', timeout=5):
-        #     page.ele('text=Connect Wallet').click('js')
-        #
-        #     page.wait(3)
-        #
-        #     js_code = """
-        #     const el1 = document.querySelector("w3m-modal")?.shadowRoot.querySelector('w3m-router')?.shadowRoot.querySelector('w3m-connect-view')?.shadowRoot.querySelector('w3m-wallet-login-list')?.shadowRoot.querySelector('w3m-connector-list')?.shadowRoot.querySelector('w3m-connect-announced-widget')?.shadowRoot.querySelector('wui-list-wallet');
-        #     el1?.click();
-        #     """
-        #     page.run_js(js_code)
-        #     page.wait(3)
-        #     okx_tab = chromium.get_tab(url='bfnaelmomeimhlpmgjnjophhpkkoljpa')
-        #     if okx_tab:
-        #         handle_okx(okx_tab, seq)
-        #         page.wait(10)
+        #     print(f"✅ 浏览器ID: {seq}, 钱包未连接")
         # else:
-        #     print(f"✅ 浏览器ID: {seq}, 已处于登录状态")
+        #     print(f"✅ 浏览器ID: {seq}, 钱包已连接")
+        #     if page.ele('x://span[@class="lg:block hidden truncate w-0 flex-1 text-right"]', timeout=5):
+        #         page.ele('x://span[@class="lg:block hidden truncate w-0 flex-1 text-right"]').wait(1).click()
+        #         if page.ele('text=Log out'):
+        #             page.ele('text=Log out').wait(1).click('js')
+        #             if page.ele('text=Confirm'):
+        #                 page.ele('text=Confirm').wait(1).click('js')
+        #             # print(f"✅ 浏览器ID: {seq}, 导入solana钱包成功")
+        #     page.wait(5)
+
+        ## Login
+        if page.ele('text=Connect Wallet', timeout=5):
+            page.ele('text=Connect Wallet').click('js')
+
+            page.wait(3)
+
+            js_code = """
+            const el1 = document.querySelector("w3m-modal")?.shadowRoot.querySelector('w3m-router')?.shadowRoot.querySelector('w3m-connect-view')?.shadowRoot.querySelector('w3m-wallet-login-list')?.shadowRoot.querySelector('w3m-connector-list')?.shadowRoot.querySelector('w3m-connect-announced-widget')?.shadowRoot.querySelector('wui-list-wallet');
+            el1?.click();
+            """
+            page.run_js(js_code)
+            page.wait(3)
+            okx_tab = chromium.get_tab(url='bfnaelmomeimhlpmgjnjophhpkkoljpa')
+            if okx_tab:
+                handle_okx(okx_tab, seq)
+                page.wait(10)
+        else:
+            print(f"✅ 浏览器ID: {seq}, 已处于登录状态")
         #
         # claims = page.eles('x://div[text()="Go"]')
         # print(f"浏览器ID: {seq}, 当前有{len(claims)} 社交任务")
