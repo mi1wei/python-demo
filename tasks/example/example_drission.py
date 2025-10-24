@@ -4,7 +4,12 @@ from chrome_extensions.okx import add_eth_wallet, choice_eth_wallet, handle_okx_
 from base.error import error_browser_seq
 import traceback
 
-def wizolayer_drission(metadata: dict):
+
+def register(chromium, page, seq, extension_url):
+    page.get(extension_url)
+    page.wait(2)
+
+def example_drission(metadata: dict):
     if len(metadata) < 10:
         return
 
@@ -22,7 +27,7 @@ def wizolayer_drission(metadata: dict):
     page = chromium.latest_tab
 
     try:
-        page.get(extension_url)
+        register(chromium, page, seq, extension_url)
         page.wait(1)
     except Exception as e:
         print(f"❌ 浏览器ID: {seq}, 出现错误: {e}")
