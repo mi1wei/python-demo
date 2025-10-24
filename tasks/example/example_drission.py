@@ -2,6 +2,7 @@ from DrissionPage import Chromium, ChromiumOptions
 from bit_api import *
 from chrome_extensions.okx import add_eth_wallet, choice_eth_wallet, handle_okx_popup
 from base.error import error_browser_seq
+import traceback
 
 def wizolayer_drission(metadata: dict):
     if len(metadata) < 10:
@@ -25,6 +26,7 @@ def wizolayer_drission(metadata: dict):
         page.wait(1)
     except Exception as e:
         print(f"❌ 浏览器ID: {seq}, 出现错误: {e}")
+        traceback.print_exc()
         error_browser_seq.append(seq)
     finally:
         page.close()
