@@ -204,6 +204,8 @@ def handle_okx(okx_tab, seq, selector='text=OKX Wallet'):
         #     if okx_tab.ele('text=连接', timeout=1):
         #         okx_tab = okx_tab.ele('text=连接').wait(1).click.for_new_tab()
 
+        if okx_tab.ele('text=授权', timeout=3):
+            okx_tab.ele('text=授权').wait(1).click()
         if okx_tab.ele('text=连接', timeout=3):
             okx_tab = safe_click_for_new_tab(okx_tab.ele('text=连接'), timeout=3)
         max_tries = 20
