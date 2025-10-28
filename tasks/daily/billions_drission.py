@@ -2,6 +2,8 @@ from DrissionPage import Chromium, ChromiumOptions
 from bit_api import *
 from chrome_extensions.okx import add_eth_wallet, choice_eth_wallet, handle_okx_popup, handle_okx
 from base.error import error_browser_seq
+from chrome_extensions.google import google_reauthorize
+
 
 # BILLIONS500K
 # SENTIENTXBILLIONS
@@ -12,7 +14,7 @@ def billions_drission(metadata: dict):
 
     browser_id = metadata['browser_id']
     seq = metadata['seq']
-    email = metadata['email']
+    email = metadata['google_username']
 
     extension_url = f"https://signup.billions.network?rc=EUKZZZF4"
 
@@ -25,27 +27,20 @@ def billions_drission(metadata: dict):
 
     try:
         page.get(extension_url)
-        if page.ele('text=Continue with Google', timeout=10):
-            page.ele('text=Continue with Google').wait(1).click('js')
+        if page.ele('text=Google', timeout=10):
+            page.ele('text=Google').wait(1).click('js')
             page.wait(5)
-            auth_google_tab = chromium.get_tab(url='accounts.google.com')
-            if auth_google_tab:
-                auth_google_tab.ele('x://div[@class="r4WGQb"]//ul/li[1]').click()
-                auth_google_tab.wait(3)
-                if auth_google_tab.ele('text=Continue', timeout=60):
-                    auth_google_tab.ele('text=Continue').wait(1).click('js')
-                checkboxs = page.eles('x://input[@type="checkbox"]', timeout=60)
-                for box in checkboxs:
-                    box.wait(1).click('js')
-                if page.ele('text=I agree', timeout=10):
-                    page.ele('text=I agree').wait(1).click('js')
+            google_reauthorize(chromium, metadata)
+            page.wait(10)
+
+        if page.ele('x:(//div[@class="ant-flex css-orst1n ant-flex-justify-center"]//button)[3]', timeout=3):
+            page.ele('x:(//div[@class="ant-flex css-orst1n ant-flex-justify-center"]//button)[3]').click('js')
+            page.wait(10)
 
         # 签到
         if page.ele('text=Click & Earn ', timeout=10):
             page.ele('text=Click & Earn ').wait(1).click('js')
             print(f'✅ 浏览器ID: {seq}, Dally Reward')
-
-
 
         # if page.ele('x://input[@placeholder="Enter code"]', timeout=60):
         #     codes = [
