@@ -20,8 +20,20 @@ def register(chromium, page, seq, extension_url):
     if page.ele('text=Apply Code', timeout=3):
         page.ele('text=Apply Code', timeout=3).wait(1).click('js')
         page.wait(2)
+
 def daily_check_in(chromium, page, seq, extension_url="https://portal.rhuna.io/quests"):
     page.get(extension_url)
+    while page.ele('text=Connect Wallet', timeout=10):
+        page.ele('text=Connect Wallet').wait(1).click('js')
+        page.wait(3)
+        try:
+            okx_tab = chromium.get_tab(url='ejjladinnckdgjemekebdpeokbikhfci')
+            if okx_tab:
+                handle_okx(okx_tab, seq)
+        except Exception as e:
+            pass
+    page.wait(5)
+
     if page.ele('text=Daily Check-in'):
         page.ele('text=Daily Check-in').wait(1).click('js')
         if page.ele('text=Claim', timeout=2):
@@ -29,6 +41,9 @@ def daily_check_in(chromium, page, seq, extension_url="https://portal.rhuna.io/q
             print(f'✅ 浏览器ID: {seq}, Daily Check-in')
         elif page.ele('text=Quest completed successfully!', timeout=2):
             print(f'✅ 浏览器ID: {seq}, Daily Check-in Completed')
+        else:
+            print(f"❌ 浏览器ID: {seq}, Daily Check-in error")
+            error_browser_seq.append(seq)
 
 #  A@qwe1994720
 def rhuna_drission(metadata: dict):
@@ -56,12 +71,12 @@ def rhuna_drission(metadata: dict):
     chromium = Chromium(co)
     page = chromium.latest_tab
 
-    # unlock_wallet(chromium.new_tab(), metadata)
+    unlock_wallet(chromium.new_tab(), metadata)
 
     try:
         # register(chromium, page, seq, extension_url)
         daily_check_in(chromium, page, seq)
-        page.wait(5)
+        page.wait(15)
     except Exception as e:
         print(f"❌ 浏览器ID: {seq}, 出现错误: {e}")
         error_browser_seq.append(seq)
