@@ -1,13 +1,13 @@
 from DrissionPage import Chromium, ChromiumOptions
 from bit_api import *
-from chrome_extensions.okx import add_eth_wallet, choice_eth_wallet, handle_okx
+from chrome_extensions.okx import add_eth_wallet, choice_eth_wallet, okx_reauthorize
 from base.error import error_browser_seq
 import traceback
 
 code = 'HKQLH0U6'
 
 
-def register(chromium, page, seq, extension_url='https://community.nitrograph.com/app/missions'):
+def register(chromium, page, metadata, extension_url='https://community.nitrograph.com/app/missions'):
     page.get(extension_url)
     if page.ele('text=Connect Wallet', timeout=10):
         page.ele('text=Connect Wallet').wait(1).click('js')
@@ -18,10 +18,24 @@ def register(chromium, page, seq, extension_url='https://community.nitrograph.co
                     """
         page.run_js(js_code)
         page.wait(3)
-        okx_tab = chromium.get_tab(url='mcohilncbfahbmgdjkbpemcciiolgcge')
-        if okx_tab:
-            handle_okx(okx_tab, seq)
-            page.wait(10)
+        okx_reauthorize(chromium, page, metadata)
+
+    # View Your Agent
+    if page.ele('text=Mint Your Agent ', timeout=5):
+        page.ele('text=Mint Your Agent ').click('js')
+
+    page.wait(2)
+
+
+def daily(chromium, page, metadata, extension_url='https://community.nitrograph.com/app/missions'):
+    # page.get(extension_url)
+    seq = metadata['seq']
+    if page.ele('text=CLAIM', timeout=5):
+        page.ele('text=CLAIM').click('js')
+        print(f"✅ 浏览器ID: {seq}, Claim your daily $NITRO")
+    if page.ele('text=Claim', timeout=5):
+        page.ele('text=Claim').click('js')
+        print(f"✅ 浏览器ID: {seq}, Daily claim")
     page.wait(2)
 
 
@@ -45,7 +59,8 @@ def nitrograph_drission(metadata: dict):
     choice_eth_wallet(chromium.new_tab(), metadata, 0)
 
     try:
-        register(chromium, page, seq)
+        register(chromium, page, metadata)
+        daily(chromium, page, metadata)
         page.wait(1)
     except Exception as e:
         print(f"❌ 浏览器ID: {seq}, 出现错误: {e}")

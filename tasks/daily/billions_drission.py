@@ -2,7 +2,7 @@ from DrissionPage import Chromium, ChromiumOptions
 from bit_api import *
 from chrome_extensions.okx import add_eth_wallet, choice_eth_wallet, handle_okx_popup, handle_okx
 from base.error import error_browser_seq
-from chrome_extensions.google import google_reauthorize
+from chrome_extensions.email_google import google_reauthorize
 
 
 # BILLIONS500K
