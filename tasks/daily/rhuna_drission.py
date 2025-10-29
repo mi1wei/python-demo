@@ -34,6 +34,51 @@ def daily_check_in(chromium, page, seq, extension_url="https://portal.rhuna.io/q
             pass
     page.wait(5)
 
+    # if page.ele('text=Join Rhuna Telegram'):
+    #     page.ele('text=Join Rhuna Telegram').wait(1).click('js')
+    #     if page.ele('text=Claim Reward', timeout=2):
+    #         page.ele('text=Claim Reward').wait(1).click('js')
+    #         print(f'✅ 浏览器ID: {seq}, Join Rhuna Telegram')
+    #     elif page.ele('text=Quest completed successfully!', timeout=2):
+    #         print(f'✅ 浏览器ID: {seq}, Join Rhuna Telegram Completed')
+    #     else:
+    #         print(f"❌ 浏览器ID: {seq}, Join Rhuna Telegram error")
+    #         error_browser_seq.append(seq)
+    #
+    #     if page.ele('x://button[contains(@class, "top-4") and contains(@class, "right-4")]'):
+    #         page.ele('x://button[contains(@class, "top-4") and contains(@class, "right-4")]').click()
+    #         page.wait(2)
+    #
+    # if page.ele('text=Rhuna on Acc Podcast'):
+    #     page.ele('text=Rhuna on Acc Podcast').wait(1).click('js')
+    #     if page.ele('text=Claim Reward', timeout=2):
+    #         page.ele('text=Claim Reward').wait(1).click('js')
+    #         print(f'✅ 浏览器ID: {seq}, Rhuna on Acc Podcast')
+    #     elif page.ele('text=Quest completed successfully!', timeout=2):
+    #         print(f'✅ 浏览器ID: {seq}, Rhuna on Acc Podcast Completed')
+    #     else:
+    #         print(f"❌ 浏览器ID: {seq}, Rhuna on Acc Podcast error")
+    #         error_browser_seq.append(seq)
+    #
+    #     if page.ele('x://button[contains(@class, "top-4") and contains(@class, "right-4")]'):
+    #         page.ele('x://button[contains(@class, "top-4") and contains(@class, "right-4")]').click()
+    #         page.wait(2)
+    #
+    # if page.ele('text=Do your first challenges on Spicenet Portal'):
+    #     page.ele('text=Do your first challenges on Spicenet Portal').wait(1).click('js')
+    #     if page.ele('text=Claim Reward', timeout=2):
+    #         page.ele('text=Claim Reward').wait(1).click('js')
+    #         print(f'✅ 浏览器ID: {seq}, Do your first challenges on Spicenet Portal')
+    #     elif page.ele('text=Quest completed successfully!', timeout=2):
+    #         print(f'✅ 浏览器ID: {seq}, Do your first challenges on Spicenet Portal Completed')
+    #     else:
+    #         print(f"❌ 浏览器ID: {seq}, Do your first challenges on Spicenet Portal error")
+    #         error_browser_seq.append(seq)
+    #
+    #     if page.ele('x://button[contains(@class, "top-4") and contains(@class, "right-4")]'):
+    #         page.ele('x://button[contains(@class, "top-4") and contains(@class, "right-4")]').click()
+    #         page.wait(2)
+
     if page.ele('text=Daily Check-in'):
         page.ele('text=Daily Check-in').wait(1).click('js')
         if page.ele('text=Claim', timeout=2):

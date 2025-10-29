@@ -27,7 +27,7 @@ def billions_drission(metadata: dict):
 
     try:
         page.get(extension_url)
-        if page.ele('text=Google', timeout=10):
+        if page.ele('text=Google', timeout=30):
             page.ele('text=Google').wait(1).click('js')
             page.wait(5)
             google_reauthorize(chromium, metadata)
@@ -44,7 +44,7 @@ def billions_drission(metadata: dict):
 
         if page.ele('text=Subscribe & Earn ', timeout=10):
             page.ele('text=Subscribe & Earn ').wait(1).click('js')
-            print(f'✅ 浏览器ID: {seq}, Dally Reward')
+            print(f'✅ 浏览器ID: {seq}, Subscribe & Earn')
 
         # if page.ele('x://input[@placeholder="Enter code"]', timeout=60):
         #     codes = [
