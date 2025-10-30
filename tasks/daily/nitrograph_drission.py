@@ -1,6 +1,6 @@
 from DrissionPage import Chromium, ChromiumOptions
 from bit_api import *
-from chrome_extensions.okx import add_eth_wallet, choice_eth_wallet, okx_reauthorize
+from chrome_extensions.okx import add_eth_wallet, choice_eth_wallet, okx_reauthorize, okx_reauthorize_2
 from base.error import error_browser_seq
 import traceback
 
@@ -9,6 +9,18 @@ code = 'HKQLH0U6'
 
 def register(chromium, page, metadata, extension_url='https://community.nitrograph.com/app/missions'):
     page.get(extension_url)
+    seq = metadata['seq']
+    if page.ele('text=Connect Wallet', timeout=10):
+        page.ele('text=Connect Wallet').wait(1).click('js')
+        page.wait(10)
+        js_code = """
+                    const el1 = document.querySelector("w3m-modal")?.shadowRoot.querySelector('w3m-router')?.shadowRoot.querySelector('w3m-connect-view')?.shadowRoot.querySelector('w3m-wallet-login-list')?.shadowRoot.querySelector('w3m-connector-list')?.shadowRoot.querySelector('wui-flex')?.querySelector('w3m-list-wallet[name="OKX Wallet"]');
+                    el1?.click();
+                    """
+        page.run_js(js_code)
+        page.wait(3)
+        okx_reauthorize_2(chromium, page, metadata)
+
     if page.ele('text=Connect Wallet', timeout=10):
         page.ele('text=Connect Wallet').wait(1).click('js')
         page.wait(10)
@@ -19,10 +31,15 @@ def register(chromium, page, metadata, extension_url='https://community.nitrogra
         page.run_js(js_code)
         page.wait(3)
         okx_reauthorize(chromium, page, metadata)
+        page.wait(10)
+        page.refresh()
+        page.wait(10)
 
+    page.get(extension_url)
     # View Your Agent
     if page.ele('text=Mint Your Agent ', timeout=5):
         page.ele('text=Mint Your Agent ').click('js')
+        print(f"✅ 浏览器ID: {seq}, Daily claim")
 
     page.wait(2)
 
@@ -36,7 +53,7 @@ def daily(chromium, page, metadata, extension_url='https://community.nitrograph.
     if page.ele('text=Claim', timeout=5):
         page.ele('text=Claim').click('js')
         print(f"✅ 浏览器ID: {seq}, Daily claim")
-    page.wait(2)
+    page.wait(10)
 
 
 def nitrograph_drission(metadata: dict):

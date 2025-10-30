@@ -1,6 +1,7 @@
 from bit_api import *
 from base.error import error_browser_seq
 from DrissionPage import Chromium, ChromiumOptions
+from DrissionPage._elements.none_element import NoneElement
 import traceback
 
 
@@ -81,6 +82,77 @@ def choice_eth_wallet(page, metadata: dict, index):
         btn = page.ele('x://button[@data-testid="fungible-token-row-solana-SOL"]')
         text = btn.text.replace('\n', '').replace('-', ' ')
         print(f"✅ 浏览器ID: {seq},{metadata['okx_solana_address']}, {text}")
+    except Exception as e:
+        print(f"❌ 浏览器ID: {seq}, 操作过程中发生错误: {e}")
+        traceback.print_exc()
+        error_browser_seq.append(seq)
+    finally:
+        try:
+            page.close()
+        except Exception as e:
+            print(f"⚠️ 浏览器ID: {seq}, 关闭页面失败: {e}")
+
+
+def choice_eth_wallet_1(metadata: dict):
+    browser_id = metadata['browser_id']
+    seq = metadata['seq']
+    private_key = metadata['my_okx_solana_wallet_private_key']
+
+    res = openBrowser(browser_id)
+    http_addr = res['data']['http']
+    # 初始化 DrissionPage 浏览器连接
+    co = ChromiumOptions()
+    res = openBrowser(browser_id)
+    co.set_address(res['data']['http'])
+    co.set_pref('profile.default_content_setting_values.notifications', 2)
+    chromium = Chromium(co)
+    page = chromium.latest_tab
+
+    extension_url = "chrome-extension://bfnaelmomeimhlpmgjnjophhpkkoljpa/popup.html"
+    page.get(extension_url)
+    try:
+
+        if page.ele('x://input[@placeholder="密码"]', timeout=5):
+            page.ele('x://input[@placeholder="密码"]').wait(1).input('12345678')
+            if page.ele('text=解锁'):
+                page.ele('text=解锁').click()
+                if page.ele('text=继续', timeout=2):
+                    page.ele('text=继续').click()
+                # print(f"✅ 浏览器ID: {seq}, 导入solana钱包成功")
+        page.wait(5)
+
+        page.ele('x://button[@data-testid="settings-menu-open-button"]').wait(5).click()
+        page.wait(1)
+        accounts_div = page.ele('#accounts')
+        buttons = accounts_div.eles('t:button')
+        wallet_names = [btn.eles('t:div')[-1].text for btn in buttons]
+        print(f"✅ 浏览器ID: {seq}, {wallet_names}")
+        for button in buttons:
+            if button.eles('t:div')[-1].text == 'solana':
+                button.click('js')
+                print(f"✅ 浏览器ID: {seq}, 选中 solana 钱包")
+
+        btn = page.ele('x://button[@data-testid="fungible-token-row-solana-SOL"]')
+        SOL = btn.text.replace('\n', '').replace('-', ' ')
+
+        btn_2 = page.ele('x://button[@data-testid="fungible-token-row-solana-NEB"]')
+        if isinstance(btn_2, NoneElement) == False:
+            NEB = btn_2.text.replace('\n', '').replace('-', ' ')
+            print(f"✅ 浏览器ID: {seq},{metadata['okx_solana_address']}, {SOL}, {NEB}")
+            if len(NEB) >= 11:
+                btn_2.click('js')
+                if page.ele('text=发送'):
+                    page.ele('text=发送').click('js')
+                    page.ele('x://textarea[@name="recipient"]').input('GQtGNoGVKxaoBWwqtyDwPKywETFhkGSkehkG4EF7oFZ4')
+                    if page.ele('text=最大'):
+                        page.ele('text=最大').click('js')
+                    if page.ele('text=下一步'):
+                        page.ele('text=下一步').click('js')
+                    while page.ele('text=发送'):
+                        page.ele('text=发送').wait(2).click('js')
+
+        page.wait(2)
+
     except Exception as e:
         print(f"❌ 浏览器ID: {seq}, 操作过程中发生错误: {e}")
         traceback.print_exc()

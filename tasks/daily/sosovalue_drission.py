@@ -50,16 +50,18 @@ def sosovalue_drission(metadata: dict):
         if page.ele('x://span[contains(text(), "Exp")]', timeout=5):
             exp = page.ele('x://span[contains(text(), "Exp")]').text
 
-        listen = page.ele('x://button[.//span[text()="访问"]]', timeout=5)
-        # if page.ele('text=点赞',timeout=5):
-        if listen:
-            listen.wait(1).click('js')
-            page.get(extension_url)
-            page.wait(10)
+        if page.ele('text=每日任务'):
+            page.ele('text=每日任务').click('js')
 
-        like = page.ele('x://button[.//span[text()="点赞"]]', timeout=5)
-        # if page.ele('text=点赞',timeout=5):
-        if like:
+        # listen = page.ele('x://button[.//span[text()="访问"]]', timeout=5)
+        # # if page.ele('text=点赞',timeout=5):
+        # if listen:
+        #     listen.wait(1).click('js')
+        #     page.get(extension_url)
+        #     page.wait(10)
+
+        likes = page.eles('x://button[.//span[text()="点赞"]]', timeout=5)
+        for like in likes:
             like.wait(1).click('js')
 
         look = page.ele('x://button[.//span[text()="观看"]]', timeout=5)
@@ -70,27 +72,20 @@ def sosovalue_drission(metadata: dict):
         if share:
             share.wait(1).click('js')
 
-        yinyong = page.ele('x://button[.//span[text()="引用"]]', timeout=5)
-        if yinyong:
-            yinyong.wait(1).click('js')
-
-        huifu = page.ele('x://button[.//span[text()="回复"]]', timeout=5)
-        if huifu:
-            huifu.wait(1).click('js')
-
-        if like or listen or share or yinyong or huifu or look:
+        if likes or look or share:
             pass
         else:
             print(f'✅ 浏览器ID: {seq}, 今日任务已经做完, {exp}')
             return
 
-        if page.ele('text=关注'):
-            page.ele('text=关注').click()
-            print(f'✅ 浏览器ID: {seq}, 关注博客成功, {exp}')
-
+        # if page.ele('text=关注'):
+        #     page.ele('text=关注').click()
+        #     print(f'✅ 浏览器ID: {seq}, 关注博客成功, {exp}')
 
         for i in range(3):
             page.refresh()
+            if page.ele('text=每日任务'):
+                page.ele('text=每日任务').click('js')
             page.wait(10)
             validations = page.eles('x://button[.//span[text()="验证"]]', timeout=5)
             if validations:

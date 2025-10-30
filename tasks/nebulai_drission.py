@@ -1,6 +1,6 @@
 from DrissionPage import Chromium, ChromiumOptions
 from bit_api import *
-from chrome_extensions.phantom import choice_eth_wallet, handle_okx,open_devnet
+from chrome_extensions.phantom import choice_eth_wallet, handle_okx, open_devnet
 from base.error import error_browser_seq
 
 

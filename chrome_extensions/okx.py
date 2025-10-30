@@ -190,13 +190,25 @@ def handle_okx_popup(page, seq, selector='text=OKX Wallet'):
         return False
 
 
-def okx_reauthorize(chromium, page, metadata):
+def okx_reauthorize_2(chromium, page, metadata):
     seq = metadata['seq']
     okx_tab = chromium.get_tab(url='mcohilncbfahbmgdjkbpemcciiolgcge')
     if okx_tab:
         handle_okx(okx_tab, seq)
         page.wait(10)
 
+    okx_tab = chromium.get_tab(url='mcohilncbfahbmgdjkbpemcciiolgcge')
+    if okx_tab:
+        if okx_tab.ele('text=授权', timeout=3):
+            okx_tab.ele('text=授权').wait(1).click()
+
+
+def okx_reauthorize(chromium, page, metadata):
+    seq = metadata['seq']
+    okx_tab = chromium.get_tab(url='mcohilncbfahbmgdjkbpemcciiolgcge')
+    if okx_tab:
+        handle_okx(okx_tab, seq)
+        page.wait(10)
 
 def handle_okx(okx_tab, seq, selector='text=OKX Wallet'):
     try:
@@ -215,8 +227,7 @@ def handle_okx(okx_tab, seq, selector='text=OKX Wallet'):
 
         if okx_tab.ele('text=连接', timeout=3):
             okx_tab = safe_click_for_new_tab(okx_tab.ele('text=连接'), timeout=3)
-            if okx_tab.ele('text=授权', timeout=3):
-                okx_tab.ele('text=授权').wait(1).click()
+
         max_tries = 20
         count = 0
         while okx_tab is not None and count < max_tries:

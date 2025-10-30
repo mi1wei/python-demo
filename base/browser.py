@@ -54,8 +54,10 @@ def get_browser_metadata(dir_path: str):
         ("secondary_email", ["secondary_email"]),
         ("okx_eth_wallets", ["my_okx_eth_wallet_address", "my_okx_eth_wallet_private_key", "my_okx_eth_wallet_mnemonic"]),
         ("okx_solana_wallets",["my_okx_solana_wallet_address", "my_okx_solana_wallet_private_key", "my_okx_solana_wallet_mnemonic"]),
+        ("okx_sui_wallets",["my_okx_sui_wallet_address", "my_okx_sui_wallet_private_key", "my_okx_sui_wallet_mnemonic"]),
         ("metamask_eth_wallets",["my_metamask_eth_wallet_address", "my_metamask_eth_wallet_private_key", "my_metamask_eth_wallet_mnemonic"]),
         ("google", ["google_username","google_password"]),
+        ("email_outlook", ["outlook_username", "outlook_password"]),
         ("okx_solana_wallets_old", ["okx_solana_address", "okx_solana_private_key"]),
         ("discord.txt", ["dc_token"])
     ]
