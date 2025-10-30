@@ -20,31 +20,45 @@ def outlook_email_login(metadata: dict):
     chromium = Chromium(co)
     page = chromium.latest_tab
 
-    extension_url = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=9199bf20-a13f-4107-85dc-02114787ef48&scope=https%3A%2F%2Foutlook.office.com%2F.default%20openid%20profile%20offline_access&redirect_uri=https%3A%2F%2Foutlook.live.com%2Fmail%2F&client-request-id=bc2634cf-790e-19ca-e466-aa43bdfbf92f&response_mode=fragment&client_info=1&prompt=select_account&nonce=019a2f70-dff0-7833-bec3-dcbfa036e208&state=eyJpZCI6IjAxOWEyZjcwLWRmZjAtNzcwNS04YmJiLTlmMTY2ZWFiZWRjNSIsIm1ldGEiOnsiaW50ZXJhY3Rpb25UeXBlIjoicmVkaXJlY3QifX0%3D%7CaHR0cHM6Ly9vdXRsb29rLmxpdmUuY29tL21haWwvMC8_ZGVlcGxpbms9bWFpbCUyRjAlMkYlM0ZubHAlM0Qw&claims=%7B%22access_token%22%3A%7B%22xms_cc%22%3A%7B%22values%22%3A%5B%22CP1%22%5D%7D%7D%7D&x-client-SKU=msal.js.browser&x-client-VER=4.14.0&response_type=code&code_challenge=wT8XkaZaYPHmdzz3S7CDrJ_vTEAMMtpTf75McXyzv4M&code_challenge_method=S256&cobrandid=ab0455a0-8d03-46b9-b18b-df2f57b9e44c&fl=dob,flname,wld&sso_reload=true"
+    extension_url = "https://outlook.live.com/mail/0/junkemail"
     page.get(extension_url)
     try:
         if page.ele('text=登录', timeout=30):
             page.ele('text=登录').wait(1).click('js')
 
-            if page.ele('x://input[@aria-label="邮箱或电话号码"]', timeout=30):
-                page.ele('x://input[@aria-label="邮箱或电话号码"]').wait(1).input(username)
+            if page.ele('x://input[@aria-describedby="loginHeader usernameError"]', timeout=30):
+                page.ele('x://input[@aria-describedby="loginHeader usernameError"]').wait(1).input(username)
+
+            if page.ele('x://input[@value="下一步"]', timeout=30):
+                page.ele('x://input[@value="下一步"]').wait(1).click('js')
+
+            if page.ele('text=使用密码', timeout=30):
+                page.ele('text=使用密码').wait(1).click()
+
+            if page.ele('x://input[@name="passwd"]', timeout=30):
+                page.ele('x://input[@name="passwd"]').wait(1).input(password)
 
             if page.ele('text=下一步', timeout=30):
                 page.ele('text=下一步').wait(1).click()
 
-            if page.ele('x://input[@aria-label="输入您的密码"]', timeout=30):
-                page.ele('x://input[@aria-label="输入您的密码"]').wait(1).input(password)
-
-            if page.ele('text=下一步', timeout=10):
+            if page.ele('text=下一步', timeout=30):
                 page.ele('text=下一步').wait(1).click()
 
-            if page.ele('x://input[@name="confirm"]', timeout=30):
-                page.ele('x://input[@name="confirm"]').wait(1).click('js')
+            if page.ele('text=暂时跳过', timeout=30):
+                page.ele('text=暂时跳过').wait(1).click()
+
+            if page.ele('text=是', timeout=30):
+                page.ele('text=是').wait(1).click()
 
             page.wait(10)
+            if 'mail/0' in page.url:
+                print(f"✅ 浏览器ID: {seq}, {username} outlook 邮箱登陆成功")
+            else:
+                error_browser_seq.append(seq)
 
-            if 'mail.google.com/mail/' in page.url:
-                print(f"✅ 浏览器ID: {seq}, {username} goolge 邮箱登陆成功")
+        elif 'mail/0' in page.url:
+            print(f"✅ 浏览器ID: {seq}, {username} outlook 邮箱处于登录态")
+        page.wait(5)
 
     except Exception as e:
         print(f"❌ 浏览器ID: {seq}, 操作过程中发生错误: {e}")
