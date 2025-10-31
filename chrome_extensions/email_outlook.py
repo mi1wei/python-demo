@@ -1,6 +1,7 @@
 from bit_api import *
 from base.error import error_browser_seq
 from DrissionPage import Chromium, ChromiumOptions
+import random
 
 
 def outlook_email_login(metadata: dict):
@@ -74,20 +75,13 @@ def outlook_email_login(metadata: dict):
             print(f"⚠️ 执行 closeBrowser({browser_id}) 失败: {e}")
 
 
-def google_reauthorize(chromium, metadata):
-    password = metadata['google_password']
-    auth_google_tab = chromium.get_tab(url='accounts.google.com')
-    if auth_google_tab:
-        auth_google_tab.ele('x://div[@class="r4WGQb"]//ul/li[1]').click()
-        auth_google_tab.wait(3)
-        if auth_google_tab.ele('x://input[@aria-label="输入您的密码"]', timeout=30):
-            auth_google_tab.ele('x://input[@aria-label="输入您的密码"]').wait(1).input(password)
-            if auth_google_tab.ele('text=下一步', timeout=10):
-                auth_google_tab.ele('text=下一步').wait(1).click()
-        if auth_google_tab.ele('text=Continue', timeout=60):
-            auth_google_tab.ele('text=Continue').wait(1).click('js')
-        # checkboxs = page.eles('x://input[@type="checkbox"]', timeout=60)
-        # for box in checkboxs:
-        #     box.wait(1).click('js')
-        # if page.ele('text=I agree', timeout=10):
-        #     page.ele('text=I agree').wait(1).click('js')
+def generate_us_phone_number():
+    area_code = random.randint(201, 999)
+    exchange_code = random.randint(200, 999)
+    line_number = random.randint(1000, 9999)
+    return f"{area_code}-{exchange_code}-{line_number}"
+
+
+def outlook_get_name_email_password(metadata):
+    return metadata['outlook_username'].lower().split('@')[0], metadata['outlook_username'], metadata[
+        'outlook_password']

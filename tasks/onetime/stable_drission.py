@@ -4,11 +4,18 @@ from chrome_extensions.okx import add_eth_wallet, choice_eth_wallet, handle_okx_
 from base.error import error_browser_seq
 import traceback
 
+# [1-27]
 
 def register(chromium, page, metadata, extension_url):
     page.get(extension_url)
-    print(page.html)
-    page.ele('x://input[@placeholder="Your Email"]').input(metadata['outlook_username'])
+    chromium.new_tab().get('https://outlook.live.com/mail/0/junkemail')
+    chromium.activate_tab(page)
+    print(metadata['outlook_username'])
+    js_code = f"""
+                      const el1 = document.querySelector('[placeholder="Your Email"]');
+                      el1.value = "{metadata['outlook_username']}"
+                  """
+    page.run_js(js_code)
     page.ele('x://button[@type="submit"]').wait(1).click('js')
     page.wait(2)
 
@@ -31,7 +38,7 @@ def stable_drission(metadata: dict):
     page = chromium.latest_tab
 
     try:
-        register(chromium, page, seq, extension_url)
+        register(chromium, page, metadata, extension_url)
         page.wait(1)
     except Exception as e:
         print(f"❌ 浏览器ID: {seq}, 出现错误: {e}")

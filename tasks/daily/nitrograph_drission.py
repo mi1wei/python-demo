@@ -39,7 +39,7 @@ def register(chromium, page, metadata, extension_url='https://community.nitrogra
     # View Your Agent
     if page.ele('text=Mint Your Agent ', timeout=5):
         page.ele('text=Mint Your Agent ').click('js')
-        print(f"✅ 浏览器ID: {seq}, Daily claim")
+        print(f"✅ 浏览器ID: {seq}, Mint Your Agent")
 
     page.wait(2)
 

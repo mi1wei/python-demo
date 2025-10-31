@@ -4,18 +4,16 @@ from chrome_extensions.okx import add_eth_wallet, choice_eth_wallet, handle_okx_
 from base.error import error_browser_seq
 import traceback
 
+# https://x.com/xiaoayi1997/status/1980837000606597301
+# 签署: app.sandchain.com/manifesto
+# 社交任务平台: app.sandchain.com
+# 领水: https://sandchain-hub.caldera.xyz
+# omnihub 铸造nft: https://omnihub.xyz/collection/sandchain-testnet/sandchain-omnihub
+# SANDchain Builder https://build.sandchain.com/landing
 
-def login(chromium, page, metadata, extension_url=''):
+def register(chromium, page, seq, extension_url):
     page.get(extension_url)
-    if page.ele('x://input[@placeholder="Enter coin name"]', timeout=5):
-        page.ele('x://input[@placeholder="Enter coin name"]').wait(1).input('xx')
     page.wait(2)
-
-def register(chromium, page, metadata, extension_url):
-    login(chromium, page, metadata, extension_url)
-
-def daily(chromium, page, metadata, extension_url):
-    login(chromium, page, metadata, extension_url)
 
 def example_drission(metadata: dict):
     if len(metadata) < 10:

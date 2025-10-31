@@ -192,23 +192,30 @@ def handle_okx_popup(page, seq, selector='text=OKX Wallet'):
 
 def okx_reauthorize_2(chromium, page, metadata):
     seq = metadata['seq']
-    okx_tab = chromium.get_tab(url='mcohilncbfahbmgdjkbpemcciiolgcge')
-    if okx_tab:
-        handle_okx(okx_tab, seq)
-        page.wait(10)
+    tabs = chromium.get_tabs()
+    for tab in tabs:
+        if tab.title == 'OKX Wallet':
+            handle_okx(tab, seq)
+            page.wait(10)
+            break
 
-    okx_tab = chromium.get_tab(url='mcohilncbfahbmgdjkbpemcciiolgcge')
-    if okx_tab:
-        if okx_tab.ele('text=授权', timeout=3):
-            okx_tab.ele('text=授权').wait(1).click()
+    tabs = chromium.get_tabs()
+    for tab in tabs:
+        if tab.title == 'OKX Wallet':
+            if tab.ele('text=授权', timeout=3):
+                tab.ele('text=授权').wait(1).click()
+            break
 
 
 def okx_reauthorize(chromium, page, metadata):
     seq = metadata['seq']
-    okx_tab = chromium.get_tab(url='mcohilncbfahbmgdjkbpemcciiolgcge')
-    if okx_tab:
-        handle_okx(okx_tab, seq)
-        page.wait(10)
+    tabs = chromium.get_tabs()
+    for tab in tabs:
+        if tab.title == 'OKX Wallet':
+            handle_okx(tab, seq)
+            page.wait(10)
+            break
+
 
 def handle_okx(okx_tab, seq, selector='text=OKX Wallet'):
     try:
