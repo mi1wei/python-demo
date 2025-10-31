@@ -12,7 +12,8 @@ def overnads_drission(metadata: dict):
     seq = metadata['seq']
     email = metadata['email']
 
-    extension_url = f"https://app.overnads.xyz/?refCode=FD5C3A3B"
+    # extension_url = f"https://app.overnads.xyz/?refCode=FD5C3A3B"
+    extension_url ="https://app.overnads.xyz/home"
 
     co = ChromiumOptions()
     res = openBrowser(browser_id)
@@ -29,7 +30,7 @@ def overnads_drission(metadata: dict):
             page.ele('text=Twitter ', timeout=10).wait(1).click('js')
             if page.ele('text=授权应用', timeout=20):
                 page.ele('text=授权应用').click()
-                page.wait(5)
+                page.wait(10)
             if page.ele('text= CLAIM ', timeout=5):
                 page.ele('text= CLAIM ').click()
             print(f"✅ 浏览器ID: {seq}, 登陆成功")

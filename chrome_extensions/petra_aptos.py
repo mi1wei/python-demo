@@ -46,7 +46,7 @@ def add_wallet(metadata: dict):
         page.ele('x://input[@name="termsOfService"]').click('js')
         page.ele('text=Continue', timeout=5).click('js')
         page.ele('text=Get started', timeout=5).click('js')
-        page.wait(5)
+        page.wait(10)
         print(f"✅ 浏览器ID: {seq}, 导入钱包成功")
 
     except Exception as e:

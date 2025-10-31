@@ -42,9 +42,13 @@ def billions_drission(metadata: dict):
             page.ele('text=Click & Earn ').wait(1).click('js')
             print(f'✅ 浏览器ID: {seq}, Dally Reward')
 
-        if page.ele('text=Subscribe & Earn ', timeout=10):
-            page.ele('text=Subscribe & Earn ').wait(1).click('js')
-            print(f'✅ 浏览器ID: {seq}, Subscribe & Earn')
+        # if page.ele('text=Subscribe & Earn ', timeout=10):
+        #     page.ele('text=Subscribe & Earn ').wait(1).click('js')
+        #     print(f'✅ 浏览器ID: {seq}, Subscribe & Earn')
+
+        if page.ele('text=Explore & earn  ', timeout=10):
+            page.ele('text=Explore & earn  ').wait(1).click('js')
+            print(f'✅ 浏览器ID: {seq}, Explore & earn')
 
         # if page.ele('x://input[@placeholder="Enter code"]', timeout=60):
         #     codes = [

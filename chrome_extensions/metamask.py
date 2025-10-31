@@ -83,7 +83,7 @@ def metamask_unlock_wallet(page, metadata: dict):
         if page.ele('x://input[@data-testid="unlock-password"]', timeout=5):
             page.ele('x://input[@data-testid="unlock-password"]').wait(1).input('12345678')
             if page.ele('text=登录'):
-                page.ele('text=登录').click()
+                page.ele('text=登录').click('js')
                 # print(f"✅ 浏览器ID: {seq}, 导入solana钱包成功")
         page.wait(2)
     except Exception as e:
