@@ -79,9 +79,9 @@ def choice_eth_wallet(page, metadata: dict, index):
                 page.ele('text=解锁').click()
                 # print(f"✅ 浏览器ID: {seq}, 导入solana钱包成功")
         page.wait(5)
-        btn = page.ele('x://button[@data-testid="fungible-token-row-solana-SOL"]')
-        text = btn.text.replace('\n', '').replace('-', ' ')
-        print(f"✅ 浏览器ID: {seq},{metadata['okx_solana_address']}, {text}")
+        # btn = page.ele('x://button[@data-testid="fungible-token-row-solana-SOL"]')
+        # text = btn.text.replace('\n', '').replace('-', ' ')
+        # print(f"✅ 浏览器ID: {seq},{metadata['okx_solana_address']}, {text}")
     except Exception as e:
         print(f"❌ 浏览器ID: {seq}, 操作过程中发生错误: {e}")
         traceback.print_exc()
@@ -135,21 +135,24 @@ def choice_eth_wallet_1(metadata: dict):
         btn = page.ele('x://button[@data-testid="fungible-token-row-solana-SOL"]')
         SOL = btn.text.replace('\n', '').replace('-', ' ')
 
-        btn_2 = page.ele('x://button[@data-testid="fungible-token-row-solana-NEB"]')
+        btn_2 = page.ele('x://button[@data-testid="fungible-token-row-solana-tesNEB"]')
         if isinstance(btn_2, NoneElement) == False:
             NEB = btn_2.text.replace('\n', '').replace('-', ' ')
             print(f"✅ 浏览器ID: {seq},{metadata['okx_solana_address']}, {SOL}, {NEB}")
             if len(NEB) >= 11:
                 btn_2.click('js')
                 if page.ele('text=发送'):
-                    page.ele('text=发送').click('js')
-                    page.ele('x://textarea[@name="recipient"]').input('GQtGNoGVKxaoBWwqtyDwPKywETFhkGSkehkG4EF7oFZ4')
+                    page.ele('text=发送').wait(2).click('js')
+                    if page.ele('x://textarea[@name="recipient"]'):
+                        page.ele('x://textarea[@name="recipient"]').input('GQtGNoGVKxaoBWwqtyDwPKywETFhkGSkehkG4EF7oFZ4')
                     if page.ele('text=最大'):
                         page.ele('text=最大').click('js')
-                    if page.ele('text=下一步'):
-                        page.ele('text=下一步').click('js')
-                    while page.ele('text=发送'):
-                        page.ele('text=发送').wait(2).click('js')
+                    while page.ele('text=下一步'):
+                        page.ele('text=下一步').wait(2).click('js')
+                    while page.ele('x://button[text()="发送"]'):
+                        page.ele('x://button[text()="发送"]').wait(2).click('js')
+                        if page.ele('text=关闭'):
+                            page.ele('text=关闭').wait(2).click('js')
 
         page.wait(2)
 
